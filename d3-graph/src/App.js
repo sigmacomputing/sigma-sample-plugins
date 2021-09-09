@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import {client, useConfig, useElementData} from '@sigmacomputing/plugin';
 import { useEffect, useRef } from 'react';
 
-client.config.configureInspector([
+client.config.configureEditorPanel([
   { name: "vertices", type: "element" },
   { name: "id", type: "column", source: "vertices" },
   { name: "edges", type: "element" },
