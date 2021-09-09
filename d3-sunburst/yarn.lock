@@ -1476,10 +1476,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@sigmacomputing/plugin@^0.6.41":
-  version "0.6.41"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.6.41.tgz#3da1adafb8af30b1158915e95a4d807d9dec10df"
-  integrity sha512-/b+TQxe1PdyNYsfHqOGzMeQl7LIrNgIbAf1Y/QExHml3m3/5ZAK9GezA9Bak4CKkSF0C52QDc6PzqXIFQ93BTw==
+"@sigmacomputing/plugin@^0.6.43":
+  version "0.6.43"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.6.43.tgz#e1a6aeca45551e09e1fe399bc75e0d2875fa2cd1"
+  integrity sha512-ygrpJacwajW3thYLGGIfmYVNDwX9aKS93ymAspTHMJl0m9ptXkcDM3G+MIeW1Asll2H7saeN9vpT5u0z0Z5ysA==
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
