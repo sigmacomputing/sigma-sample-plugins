@@ -4,7 +4,7 @@ import {client, useConfig, useElementColumns, useElementData} from '@sigmacomput
 import pluralize from 'pluralize';
 import { useEffect, useMemo, useState } from 'react';
 
-client.config.configureInspector([
+client.config.configureEditorPanel([
   { name: 'apiKey', type: 'text', secure: true },
   { name: 'source', type: 'element' },
   { name: 'dimension', type: 'column', source: 'source', allowMultiple: false },
