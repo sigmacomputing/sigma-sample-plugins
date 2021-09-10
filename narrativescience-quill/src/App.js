@@ -5,10 +5,10 @@ import pluralize from 'pluralize';
 import { useEffect, useMemo, useState } from 'react';
 
 client.config.configureInspector([
+  { name: 'apiKey', type: 'text', secure: true },
   { name: 'source', type: 'element' },
   { name: 'dimension', type: 'column', source: 'source', allowMultiple: false },
   { name: 'measures', type: 'column', source: 'source', allowMultiple: true },
-  { name: 'apiKey', type: 'text', secure: true },
 ]);
 
 function getQuillPayload(sigmaData, colInfo, config) {
