@@ -8,7 +8,7 @@ import {
 } from "@sigmacomputing/plugin";
 import * as React from 'react';
 
-client.config.configureInspector([
+client.config.configureEditorPanel([
   { name: "source", type: "element" },
   { name: "dimension", type: "column", source: "source", allowMultiple: false },
   { name: "measures", type: "column", source: "source", allowMultiple: false },
