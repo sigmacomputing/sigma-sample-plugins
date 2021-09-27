@@ -7,7 +7,7 @@ import {
   useElementData,
 } from "@sigmacomputing/plugin";
 import { useMemo, useRef } from "react";
-import { groupBy, sum, uniq } from "lodash";
+import { sum } from "lodash";
 import { format, fromUnixTime } from "date-fns";
 
 client.config.configureEditorPanel([
@@ -46,6 +46,8 @@ function getChart(data, ref) {
   const svg = d3
     .select(ref.current)
     .attr("viewBox", [0, 0, width, width])
+    // Responsive SVG needs these 2 attributes and no width and height attr.
+    .attr("preserveAspectRatio", "xMinYMin meet")
     .style("font", "10px sans-serif");
 
   const g = svg
@@ -212,11 +214,7 @@ function App() {
     };
   }, [columns, config.dimension, config.measures, sigmaData]);
   useMemo(() => getChart(data, ref), [data]);
-  return (
-    <div className="App">
-      <svg ref={ref} />
-    </div>
-  );
+  return (<svg ref={ref} height="100vh" width="100vw" />);
 }
 
 export default App;
