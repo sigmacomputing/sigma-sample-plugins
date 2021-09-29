@@ -45,9 +45,11 @@ function getChart(data, ref) {
   d3.selectAll('svg > *').remove();
   const svg = d3
     .select(ref.current)
+    .attr("width", "100vw")
+    .attr("height", "100vh")
     .attr("viewBox", [0, 0, width, width])
     // Responsive SVG needs these 2 attributes and no width and height attr.
-    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("preserveAspectRatio", "xMidYMid meet")
     .style("font", "10px sans-serif");
 
   const g = svg
@@ -214,7 +216,7 @@ function App() {
     };
   }, [columns, config.dimension, config.measures, sigmaData]);
   useMemo(() => getChart(data, ref), [data]);
-  return (<svg ref={ref} height="100vh" width="100vw" />);
+  return (<svg ref={ref} />);
 }
 
 export default App;

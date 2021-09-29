@@ -29,12 +29,6 @@
   left: 0;
 }
 
-svg .rect {
-  fill: gold;
-  stroke: steelblue;
-  stroke-width: 5px;
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
