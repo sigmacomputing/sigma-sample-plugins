@@ -27,6 +27,9 @@ function renderGraph(data, ref) {
       .force("center", d3.forceCenter(width / 2, height / 2));
 
   const svg = d3.select(ref.current)
+      .attr("width", "100vw")
+      .attr("height", "100vh")
+      .attr("preserveAspectRatio", "xMidYMid meet")
       .attr("viewBox", [0, 0, width, height]);
 
   const link = svg.append("g")
