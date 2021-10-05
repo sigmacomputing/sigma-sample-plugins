@@ -1,13 +1,7 @@
-import logo from "./logo.svg";
-import {
-  client,
-  useConfig,
-  useElementData,
-  useElementColumns,
-} from "@sigmacomputing/plugin";
+import { client, useConfig, useElementData } from "@sigmacomputing/plugin";
 import "./App.css";
-import * as d3 from 'd3';
-import React from "react";
+import * as d3 from "d3";
+import React, { useRef } from "react";
 
 client.config.configureEditorPanel([
   { name: "source", type: "element" },
@@ -18,11 +12,115 @@ client.config.configureEditorPanel([
   { name: "close", type: "column", source: "source", allowMultiple: false },
 ]);
 
+const height = 300;
+const width = 600;
+const margin = { top: 10, right: 30, bottom: 30, left: 40 };
+
+const formatDate = d3.utcFormat("%B %-d, %Y");
+const formatValue = d3.format(".2f");
+const formatChange = function () {
+  const f = d3.format("+.2%");
+  return (y0, y1) => f((y1 - y0) / y0);
+};
+
+function renderChart(data, ref) {
+  // data from weekdays only and ticks are set to Mondays
+  // max range of dates: 8 months, otherwise x-axis may get too cramped unless ticks are changed
+  const x = d3
+    .scaleBand()
+    .domain(
+      d3.utcDay
+        .range(data[0].date, +data[data.length - 1].date + 1)
+        .filter((d) => d.getUTCDay() !== 0 && d.getUTCDay() !== 6)
+    )
+    .rangeRound([margin.left, width - margin.right])
+    .padding(0.2);
+
+  const y = d3
+    .scaleLinear()
+    .domain([d3.min(data, (d) => d.low), d3.max(data, (d) => d.high)])
+    .range([height - margin.bottom, margin.top]);
+
+  const xAxis = (g) =>
+    g
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .call(
+        d3
+          .axisBottom(x)
+          .tickValues(
+            d3.utcMonday
+              .every(width > 720 ? 1 : 2)
+              .range(data[0].date, data[data.length - 1].date)
+          )
+          .tickFormat(d3.utcFormat("%-m/%-d"))
+      )
+      .call((g) => g.select(".domain").remove());
+
+  const yAxis = (g) =>
+    g
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(
+        d3
+          .axisLeft(y)
+          .tickFormat(d3.format("$~f"))
+          .tickValues(d3.scaleLinear().domain(y.domain()).ticks())
+      )
+      .call((g) =>
+        g
+          .selectAll(".tick line")
+          .clone()
+          .attr("stroke-opacity", 0.2)
+          .attr("x2", width - margin.left - margin.right)
+      )
+      .call((g) => g.select(".domain").remove());
+
+  const svg = d3.select(ref.current).attr("viewBox", [0, 0, width, height]);
+
+  svg.append("g").call(xAxis);
+
+  svg.append("g").call(yAxis);
+
+  const g = svg
+    .append("g")
+    .attr("stroke-linecap", "round")
+    .attr("stroke", "black")
+    .selectAll("g")
+    .data(data)
+    .join("g")
+    .attr("transform", (d) => `translate(${x(d.date)},0)`);
+
+  g.append("line")
+    .attr("y1", (d) => y(d.low))
+    .attr("y2", (d) => y(d.high));
+
+  g.append("line")
+    .attr("y1", (d) => y(d.open))
+    .attr("y2", (d) => y(d.close))
+    .attr("stroke-width", x.bandwidth())
+    .attr("stroke", (d) =>
+      d.open > d.close
+        ? d3.schemeSet1[0]
+        : d.close > d.open
+        ? d3.schemeSet1[2]
+        : d3.schemeSet1[8]
+    );
+
+  g.append("title").text(
+    (d) => `${formatDate(d.date)}
+Open: ${formatValue(d.open)}
+Close: ${formatValue(d.close)} (${formatChange(d.open, d.close)})
+Low: ${formatValue(d.low)}
+High: ${formatValue(d.high)}`
+  );
+
+  return svg.node();
+}
+
 function App() {
   const config = useConfig();
+  const ref = useRef();
 
   const sigmaData = useElementData(config.source);
-  const columns = useElementColumns(config.source);
 
   const date = sigmaData[config["date"]];
   console.log(date);
@@ -31,71 +129,35 @@ function App() {
   const open = sigmaData[config["open"]];
   const close = sigmaData[config["close"]];
 
-  if (date && high && low && open && close) {
-    const dateId = config.date;
-    var dateTitle = columns[dateId].name;
-
-    const highId = config.high;
-    var highTitle = columns[highId].name;
-
-    const lowId = config.low;
-    var lowTitle = columns[lowId].name;
-
-    const openId = config.open;
-    var openTitle = columns[openId].name;
-
-    const closeId = config.close;
-    var closeTitle = columns[closeId].name;
-  }
-
   const data = React.useMemo(() => {
     const data = [];
 
     if (date && high && low && open && close) {
       for (let i = 0; i < date.length; i++) {
-        let row = {};
-
-        row[dateTitle] = new Date(date[i]);
-        row[highTitle] = high[i];
-        row[lowTitle] = low[i];
-        row[openTitle] = open[i];
-        row[closeTitle] = close[i];
-
+        let dateTime = new Date(date[i]);
+        const offset = dateTime.getTimezoneOffset();
+        dateTime = new Date(dateTime.getTime() - offset * 60 * 1000);
+        let row = {
+          date: dateTime,
+          high: high[i],
+          low: low[i],
+          open: open[i],
+          close: close[i],
+        };
         data.push(row);
       }
     }
-
+    console.log(data);
     return data;
-  }, [
-    date,
-    dateTitle,
-    high,
-    highTitle,
-    low,
-    lowTitle,
-    open,
-    openTitle,
-    close,
-    closeTitle,
-  ]);
+  }, [date, high, low, open, close]);
 
   console.log(data);
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-          <div>{JSON.stringify(data)}</div>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+  React.useMemo(() => {
+    if (data.length) renderChart(data, ref);
+  }, [data]);
+
+  return <svg ref={ref} />;
 }
 
 export default App;
