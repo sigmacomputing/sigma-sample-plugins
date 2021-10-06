@@ -5,6 +5,7 @@ import React, { useRef } from "react";
 
 client.config.configureEditorPanel([
   { name: "source", type: "element" },
+  // max range of dates: 8 months, otherwise x-axis may get too cramped unless ticks are changed
   { name: "date", type: "column", source: "source", allowMultiple: false },
   { name: "high", type: "column", source: "source", allowMultiple: false },
   { name: "low", type: "column", source: "source", allowMultiple: false },
@@ -14,26 +15,17 @@ client.config.configureEditorPanel([
 
 const height = 300;
 const width = 600;
-const margin = { top: 10, right: 30, bottom: 30, left: 40 };
-
-const formatDate = d3.utcFormat("%B %-d, %Y");
-const formatValue = d3.format(".2f");
-const formatChange = function () {
-  const f = d3.format("+.2%");
-  return (y0, y1) => f((y1 - y0) / y0);
-};
+const margin = { top: 0, right: 25, bottom: 20, left: 40 };
 
 function renderChart(data, ref) {
-  // data from weekdays only and ticks are set to Mondays
-  // max range of dates: 8 months, otherwise x-axis may get too cramped unless ticks are changed
   const x = d3
     .scaleBand()
+    //ticks are set to Mondays
     .domain(
       d3.utcDay
         .range(data[0].date, +data[data.length - 1].date + 1)
-        .filter((d) => d.getUTCDay() !== 0 && d.getUTCDay() !== 6)
     )
-    .rangeRound([margin.left, width - margin.right])
+    .rangeRound([30, width - 20])
     .padding(0.2);
 
   const y = d3
@@ -75,9 +67,7 @@ function renderChart(data, ref) {
       .call((g) => g.select(".domain").remove());
 
   const svg = d3.select(ref.current).attr("viewBox", [0, 0, width, height]);
-
   svg.append("g").call(xAxis);
-
   svg.append("g").call(yAxis);
 
   const g = svg
@@ -105,14 +95,6 @@ function renderChart(data, ref) {
         : d3.schemeSet1[8]
     );
 
-  g.append("title").text(
-    (d) => `${formatDate(d.date)}
-Open: ${formatValue(d.open)}
-Close: ${formatValue(d.close)} (${formatChange(d.open, d.close)})
-Low: ${formatValue(d.low)}
-High: ${formatValue(d.high)}`
-  );
-
   return svg.node();
 }
 
@@ -123,7 +105,6 @@ function App() {
   const sigmaData = useElementData(config.source);
 
   const date = sigmaData[config["date"]];
-  console.log(date);
   const high = sigmaData[config["high"]];
   const low = sigmaData[config["low"]];
   const open = sigmaData[config["open"]];
@@ -147,11 +128,8 @@ function App() {
         data.push(row);
       }
     }
-    console.log(data);
     return data;
   }, [date, high, low, open, close]);
-
-  console.log(data);
 
   React.useMemo(() => {
     if (data.length) renderChart(data, ref);
