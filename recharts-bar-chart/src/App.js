@@ -4,7 +4,6 @@ import {
   useElementData,
   useElementColumns,
 } from "@sigmacomputing/plugin";
-import "./App.css";
 import React from "react";
 import {
   ResponsiveContainer,
@@ -18,14 +17,21 @@ import {
 } from "recharts";
 
 client.config.configureEditorPanel([
-  { name: "source", type: "element" },
   {
+    // configuring selection of data source
+    name: "source",
+    type: "element",
+  },
+  {
+    // configuring selection of data column from the source that contains qualitative values
+    // (e.g. names, dates)
     name: "dimension",
     type: "column",
     source: "source",
     allowMultiple: false,
   },
   {
+    // configuring selection of data column(s) from the source that contain quantitative, numeric values
     name: "measures",
     type: "column",
     source: "source",
@@ -33,14 +39,14 @@ client.config.configureEditorPanel([
   },
 ]);
 
+// chart layout via Recharts
 function RenderBarChart(props) {
-  console.log(props);
   return (
-    <ResponsiveContainer width="200%" height={500}>
+    <ResponsiveContainer width="100%" height={500}>
       <BarChart
         data={props.data}
         margin={{
-          top: 5,
+          top: 0,
           right: 50,
           left: 30,
           bottom: 90,
@@ -57,13 +63,15 @@ function RenderBarChart(props) {
         <YAxis />
         <Tooltip />
         <Legend verticalAlign="top" wrapperStyle={{ lineHeight: "40px" }} />
-        {props.measureNames.slice(0, 3).map((m, i) => ( // limiting number of bars rendered to max 3
-          <Bar
-            key={m}
-            dataKey={props.measureNames[i]}
-            fill={props.barFills[i]}
-          />
-        ))}
+        {props.measureNames.slice(0, 3).map( // limiting number of bars rendered to max 3
+          (m, i) => (
+            <Bar
+              key={m}
+              dataKey={props.measureNames[i]}
+              fill={props.barFills[i]}
+            />
+          )
+        )}
       </BarChart>
     </ResponsiveContainer>
   );
@@ -72,48 +80,42 @@ function RenderBarChart(props) {
 function App() {
   const config = useConfig();
 
-  const sigmaData = useElementData(config.source);
-  const columns = useElementColumns(config.source);
+  // object of arrays, where each array contains data from the columns of the
+  // data source selected in the editor panel
+  const sigmaData = useElementData(config.source); 
+  // object of arrays, where each array contains information about each column of the data source
+  // (e.g. columnType, format, id, name)
+  const columnInfo = useElementColumns(config.source);
 
-  const dimension = sigmaData[config["dimension"]];
-  const measures = config.measures;
+  // arrays of the ids corresponding to the "dimension" and "measures" data columns from the editor panel
+  const {dimension, measures} = config;
 
   if (dimension && measures) {
-    const dimId = config.dimension;
-    var dimName = columns[dimId].name;
-
-    var numMeasures = config.measures.length;
+    var dimensionName = columnInfo[dimension].name;
+    var numMeasures = measures.length;
   }
 
-  const measureIds = React.useMemo(() => {
-    const measureIds = [];
-
-    for (let i = 0; i < numMeasures; i++) {
-      measureIds.push(config.measures[i]);
-    }
-
-    return measureIds;
-  }, [config.measures, numMeasures]);
-
+  // filling an array with all the names of the selected data columns (will use in data rearrangement)
   const measureNames = React.useMemo(() => {
     const measureNames = [];
 
     for (let i = 0; i < numMeasures; i++) {
-      measureNames.push(columns[measureIds[i]].name);
+      measureNames.push(columnInfo[measures[i]].name);
     }
 
     return measureNames;
-  }, [columns, measureIds, numMeasures]);
+  }, [columnInfo, measures, numMeasures]);
 
+  // rearranging the data so that Recharts can accept it
   const data = React.useMemo(() => {
     const data = [];
 
     if (dimension && measures) {
-      for (let i = 0; i < dimension.length; i++) {
+      for (let i = 0; i < sigmaData[dimension].length; i++) {
         let row = {};
-        row[dimName] = dimension[i];
+        row[dimensionName] = sigmaData[dimension][i];
         for (let j = 0; j < numMeasures; j++) {
-          row[measureNames[j]] = sigmaData[measureIds[j]][i];
+          row[measureNames[j]] = sigmaData[measures[j]][i];
         }
         data.push(row);
       }
@@ -123,9 +125,8 @@ function App() {
     dimension,
     measures,
     numMeasures,
-    dimName,
+    dimensionName,
     sigmaData,
-    measureIds,
     measureNames,
   ]);
 
@@ -134,7 +135,7 @@ function App() {
   return (
     <RenderBarChart
       data={data}
-      xAxisDataKey={dimName}
+      xAxisDataKey={dimensionName}
       numMeasures={numMeasures}
       measureNames={measureNames}
       barFills={barFills}
