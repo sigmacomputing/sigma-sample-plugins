@@ -1,11 +1,12 @@
 import { client, useConfig, useElementData } from "@sigmacomputing/plugin";
-import "./App.css";
 import * as d3 from "d3";
 import React, { useRef } from "react";
 
 client.config.configureEditorPanel([
+  // configuring selection of data source table
   { name: "source", type: "element" },
-  // max range of dates: 8 months, otherwise x-axis may get too cramped unless ticks are changed
+  // configuring selection of columns
+  // suggested max range of dates: 8 months, otherwise x-axis may get too cramped unless ticks are changed
   { name: "date", type: "column", source: "source", allowMultiple: false },
   { name: "high", type: "column", source: "source", allowMultiple: false },
   { name: "low", type: "column", source: "source", allowMultiple: false },
@@ -17,10 +18,11 @@ const height = 300;
 const width = 600;
 const margin = { top: 0, right: 25, bottom: 20, left: 40 };
 
+// chart layout via D3
 function renderChart(data, ref) {
   const x = d3
     .scaleBand()
-    //ticks are set to Mondays
+    // ticks are set to Mondays
     .domain(
       d3.utcDay
         .range(data[0].date, +data[data.length - 1].date + 1)
@@ -102,19 +104,24 @@ function App() {
   const config = useConfig();
   const ref = useRef();
 
+  // object of arrays, where each array contains data from the columns of the
+  // data source selected in the editor panel
   const sigmaData = useElementData(config.source);
 
+  // arrays filled with data from the corresponding columns selected in the editor panel
   const date = sigmaData[config["date"]];
   const high = sigmaData[config["high"]];
   const low = sigmaData[config["low"]];
   const open = sigmaData[config["open"]];
   const close = sigmaData[config["close"]];
 
+  // rearranging the data so that D3 can accept it
   const data = React.useMemo(() => {
     const data = [];
 
-    if (date && high && low && open && close) {
+    if (date && high && low && open && close && Object.keys(sigmaData).length) {
       for (let i = 0; i < date.length; i++) {
+        // reformat date, accounting for timezone offsets
         let dateTime = new Date(date[i]);
         const offset = dateTime.getTimezoneOffset();
         dateTime = new Date(dateTime.getTime() - offset * 60 * 1000);
@@ -129,7 +136,7 @@ function App() {
       }
     }
     return data;
-  }, [date, high, low, open, close]);
+  }, [date, high, low, open, close, sigmaData]);
 
   React.useMemo(() => {
     if (data.length) renderChart(data, ref);
