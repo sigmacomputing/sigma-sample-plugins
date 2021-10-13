@@ -63,7 +63,8 @@ function RenderBarChart(props) {
         <YAxis />
         <Tooltip />
         <Legend verticalAlign="top" wrapperStyle={{ lineHeight: "40px" }} />
-        {props.measureNames.slice(0, 3).map( // limiting number of bars rendered to max 3
+        {props.measureNames.slice(0, 3).map(
+          // limiting number of bars rendered to max 3
           (m, i) => (
             <Bar
               key={m}
@@ -82,15 +83,14 @@ function App() {
 
   // object of arrays, where each array contains data from the columns of the
   // data source selected in the editor panel
-  const sigmaData = useElementData(config.source); 
+  const sigmaData = useElementData(config.source);
   // object of arrays, where each array contains information about each column of the data source
   // (e.g. columnType, format, id, name)
   const columnInfo = useElementColumns(config.source);
 
   // arrays of the ids corresponding to the "dimension" and "measures" data columns from the editor panel
-  const {dimension, measures} = config;
+  const { dimension, measures } = config;
 
-  console.log(columnInfo)
   if (dimension && measures && Object.keys(columnInfo).length) {
     var dimensionName = columnInfo[dimension].name;
     var numMeasures = measures.length;
@@ -99,9 +99,10 @@ function App() {
   // filling an array with all the names of the selected data columns (will use in data rearrangement)
   const measureNames = React.useMemo(() => {
     const measureNames = [];
-
-    for (let i = 0; i < numMeasures; i++) {
-      measureNames.push(columnInfo[measures[i]].name);
+    if (numMeasures && Object.keys(columnInfo).length) {
+      for (let i = 0; i < numMeasures; i++) {
+        measureNames.push(columnInfo[measures[i]].name);
+      }
     }
 
     return measureNames;
