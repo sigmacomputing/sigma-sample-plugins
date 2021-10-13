@@ -1,5 +1,5 @@
 {
-  "name": "recharts-bar-chart",
+  "name": "sample-plugin-bar-chart",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
