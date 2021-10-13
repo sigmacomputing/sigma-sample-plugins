@@ -41,12 +41,16 @@ Select your source data table by selecting it in the "Select..." dropdown menu
 
 <img src="readme_images/select-source.png" alt="screenshot of 'Select...' dropdown" width="300">
 
+If you have groupings in your data table that you wish for this plugin to take into account, select an option from the "Aggregation Level" dropdown menu.
+
+<img src="readme_images/aggregation-level.png" alt="screenshot of aggregation level dropdown" width="300">
+
 Select your dimension and measure(s) by clicking on the "+" symbol next to these categories and then selecting the columns you want to use from your source data table.
 
 - **Note:** For this plugin specifically, the chart that is produced will only display the first three measures that you select as bars in order to conserve space.
 
-<img src="readme_images/add-dimension.png" alt="screenshot of dimension column selection" height="400">
-<img src="readme_images/add-measures.png" alt="screenshot of measure columns selection" height="400" align="top">
+<img src="readme_images/add-dimension.png" alt="screenshot of dimension column selection" height="315">
+<img src="readme_images/add-measures.png" alt="screenshot of measure columns selection" height="315" align="top">
 
 You should now be able to view the bar chart representation of your data!
 
