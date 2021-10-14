@@ -104,8 +104,10 @@ function App() {
   const config = useConfig();
   const ref = useRef();
 
-  // object of arrays, where each array contains data from the columns of the
-  // data source selected in the editor panel
+  // Sigma represents their data in a columnar format. Given a data source, useElementData will return 
+  // any columns specified in the side panel with their respective data. 
+  // The format is { [columnId: string]: any[] }
+  // For more details / examples on the API, refer to the documentation.
   const sigmaData = useElementData(config.source);
 
   // arrays filled with data from the corresponding columns selected in the editor panel
