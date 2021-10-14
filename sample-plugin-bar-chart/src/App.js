@@ -81,11 +81,12 @@ function RenderBarChart(props) {
 function App() {
   const config = useConfig();
 
-  // object of arrays, where each array contains data from the columns of the
-  // data source selected in the editor panel
+  // Sigma represents their data in a columnar format. Given a data source, useElementData will return 
+  // any columns specified in the side panel with their respective data. 
+  // The format is { [columnId: string]: any[] } 
+  // For more details / examples on the API, refer to the documentation.
   const sigmaData = useElementData(config.source);
-  // object of arrays, where each array contains information about each column of the data source
-  // (e.g. columnType, format, id, name)
+
   const columnInfo = useElementColumns(config.source);
 
   // arrays of the ids corresponding to the "dimension" and "measures" data columns from the editor panel
@@ -96,7 +97,6 @@ function App() {
     var numMeasures = measures.length;
   }
 
-  // filling an array with all the names of the selected data columns (will use in data rearrangement)
   const measureNames = React.useMemo(() => {
     const measureNames = [];
     if (numMeasures && Object.keys(columnInfo).length) {
