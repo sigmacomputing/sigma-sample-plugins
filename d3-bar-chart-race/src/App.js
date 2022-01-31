@@ -1,7 +1,7 @@
 import "./App.css";
 import * as d3 from "d3";
 import { client, useConfig, useElementData } from "@sigmacomputing/plugin";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 // import "@observablehq/stdlib";
 
 client.config.configureEditorPanel([
@@ -9,6 +9,7 @@ client.config.configureEditorPanel([
   { name: "date", type: "column", source: "source", allowMultiple: false },
   { name: "category", type: "column", source: "source", allowMultiple: false },
   { name: "value", type: "column", source: "source", allowMultiple: false },
+  { name: "rank", type: "text", source: "source", allowMultiple: false },
 ]);
 
 function convertData(data, dateData, category, measure) {
@@ -24,22 +25,6 @@ function convertData(data, dateData, category, measure) {
   return convertedData;
 }
 
-// global variable
-const n = 6;
-// const k = 100;
-const margin = { top: 16, right: 6, bottom: 6, left: 0 };
-const barSize = 40;
-const height = margin.top + barSize * n + margin.bottom;
-const width = 1000;
-const x = d3.scaleLinear([0, 1], [margin.left, width - margin.right]);
-const y = d3
-  .scaleBand()
-  .domain(d3.range(n + 1))
-  .rangeRound([margin.top, margin.top + barSize * (n + 1 + 0.1)])
-  .padding(0.1);
-const duration = 3000;
-
-// main function
 function App() {
   const config = useConfig();
   const sigmaData = useElementData(config.source);
@@ -48,8 +33,35 @@ function App() {
   const category = sigmaData[config.category] ?? [];
   const measure = sigmaData[config.value] ?? [];
 
+  // const k = 100;
+  const n = 6;
+  const margin = { top: 30, right: 30, bottom: 10, left: 0 };
+  const barSize = 30;
+  const height = margin.top + barSize * n + margin.bottom;
+  const width = 1200;
+  const x = d3.scaleLinear([0, 1], [margin.left, width - margin.right]);
+  const y = d3
+    .scaleBand()
+    .domain(d3.range(n + 1))
+    .rangeRound([margin.top, margin.top + barSize * (n + 1 + 0.1)])
+    .padding(0.1);
+  const duration = 1000;
+
   // data preprocesing
   const data = convertData(sigmaData, dateData, category, measure);
+  // const data = (data, dateData, category, measure) => {
+  //   const convertedData = [];
+  //   for (let i = 0; i < dateData.length; i++) {
+  //     let item = {
+  //       date: dateData[i],
+  //       name: category[i],
+  //       value: measure[i],
+  //     };
+  //     convertedData.push(item);
+  //   }
+  //   return convertedData;
+  // };
+
   const names = new Set(data.map((d) => d.name));
   const datevalues = Array.from(
     d3.rollup(
@@ -62,12 +74,15 @@ function App() {
     .map(([date, data]) => [new Date(date), data])
     .sort(([a], [b]) => d3.ascending(a, b));
 
-  function rank(value) {
-    const data = Array.from(names, (name) => ({ name, value: value(name) }));
-    data.sort((a, b) => d3.descending(a.value, b.value));
-    for (let i = 0; i < data.length; ++i) data[i].rank = Math.min(n, i);
-    return data;
-  }
+  const rank = useCallback(
+    (value) => {
+      const data = Array.from(names, (name) => ({ name, value: value(name) }));
+      data.sort((a, b) => d3.descending(a.value, b.value));
+      for (let i = 0; i < data.length; ++i) data[i].rank = Math.min(n, i);
+      return data;
+    },
+    [names]
+  );
 
   const keyframes = useMemo(
     function createkeyframes() {
@@ -81,7 +96,6 @@ function App() {
     [datevalues, rank]
   );
 
-  // console.log(keyframes);
   const nameframes = d3.groups(
     keyframes.flatMap(([, data]) => data),
     (d) => d.name
@@ -100,6 +114,7 @@ function App() {
     // }
     return (d) => scale(d.name);
   }
+
   function bars(svg) {
     let bar = svg.append("g").attr("fill-opacity", 0.6).selectAll("rect");
 
@@ -134,7 +149,7 @@ function App() {
   function labels(svg) {
     let label = svg
       .append("g")
-      .style("font", "white")
+      .style("font", "bold 10px sans-serif")
       .style("font-variant-numeric", "tabular-nums")
       .attr("text-anchor", "end")
       .selectAll("text");
@@ -160,7 +175,7 @@ function App() {
               .call((text) =>
                 text
                   .append("tspan")
-                  .attr("fill-opacity", 0.7)
+                  .attr("fill-opacity", 0.6)
                   .attr("font-weight", "normal")
                   .attr("x", -6)
                   .attr("dy", "1.15em")
@@ -210,7 +225,6 @@ function App() {
 
   function axis(svg) {
     const g = svg.append("g").attr("transform", `translate(0,${margin.top})`);
-
     const axis = d3
       .axisTop(x)
       .ticks(width / 150)
@@ -231,10 +245,10 @@ function App() {
     if (keyframes.length) {
       const now = svg
         .append("text")
-        .style("font", `bold ${barSize}px var(--sans-serif)`)
+        .style("font", `bold ${barSize}px sans-serif`)
         .style("font-variant-numeric", "tabular-nums")
         .attr("text-anchor", "end")
-        .attr("x", width - 6)
+        .attr("x", width - 30)
         .attr("y", margin.top + barSize * (n - 0.45))
         .attr("dy", "0.32em")
         .text(formatDate(keyframes[0][0]));
@@ -255,7 +269,7 @@ function App() {
       const updateLabels = labels(svg);
       const updateTicker = ticker(svg);
 
-      // yield svg.node();
+      yield svg.node();
       for (const keyframe of keyframes) {
         const transition = svg
           .transition()
@@ -272,14 +286,15 @@ function App() {
         yield transition.end();
       }
     },
-    [keyframes, ref, labels, axis, ticker, bars]
+    [keyframes, ref]
   );
 
   let index = 0;
-  while (index < keyframes.length) {
+  while (index < 20) {
     iter.next();
     index++;
   }
+  console.log("hello");
   return <svg ref={setRef} />;
 }
 
