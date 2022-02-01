@@ -2,14 +2,14 @@ import "./App.css";
 import * as d3 from "d3";
 import { client, useConfig, useElementData } from "@sigmacomputing/plugin";
 import { useCallback, useMemo, useState } from "react";
-// import "@observablehq/stdlib";
+import { useEffect } from "react/cjs/react.development";
 
 client.config.configureEditorPanel([
   { name: "source", type: "element" },
   { name: "date", type: "column", source: "source", allowMultiple: false },
   { name: "category", type: "column", source: "source", allowMultiple: false },
   { name: "value", type: "column", source: "source", allowMultiple: false },
-  { name: "rank", type: "text", source: "source", allowMultiple: false },
+  { name: "rank", type: "text", source: "source", placeholder: "rank" },
 ]);
 
 function convertData(data, dateData, category, measure) {
@@ -33,8 +33,11 @@ function App() {
   const category = sigmaData[config.category] ?? [];
   const measure = sigmaData[config.value] ?? [];
 
-  // const k = 100;
-  const n = 6;
+  // data preprocesing
+  const data = convertData(sigmaData, dateData, category, measure);
+  const names = new Set(data.map((d) => d.name));
+
+  const n = Math.min(names.size, config.rank);
   const margin = { top: 30, right: 30, bottom: 10, left: 0 };
   const barSize = 30;
   const height = margin.top + barSize * n + margin.bottom;
@@ -47,22 +50,6 @@ function App() {
     .padding(0.1);
   const duration = 1000;
 
-  // data preprocesing
-  const data = convertData(sigmaData, dateData, category, measure);
-  // const data = (data, dateData, category, measure) => {
-  //   const convertedData = [];
-  //   for (let i = 0; i < dateData.length; i++) {
-  //     let item = {
-  //       date: dateData[i],
-  //       name: category[i],
-  //       value: measure[i],
-  //     };
-  //     convertedData.push(item);
-  //   }
-  //   return convertedData;
-  // };
-
-  const names = new Set(data.map((d) => d.name));
   const datevalues = Array.from(
     d3.rollup(
       data,
@@ -81,7 +68,7 @@ function App() {
       for (let i = 0; i < data.length; ++i) data[i].rank = Math.min(n, i);
       return data;
     },
-    [names]
+    [names, n]
   );
 
   const keyframes = useMemo(
@@ -105,17 +92,12 @@ function App() {
   );
   const next = new Map(nameframes.flatMap(([, data]) => d3.pairs(data)));
 
-  function color(d) {
-    const scale = d3.scaleOrdinal(d3.schemeTableau10);
-    // if (data.some((d) => d.category !== undefined)) {
-    //   const categoryByName = new Map(data.map((d) => [d.name, d.category]));
-    //   scale.domain(Array.from(categoryByName.values()));
-    //   return (d) => scale(categoryByName.get(d.name));
-    // }
-    return (d) => scale(d.name);
-  }
+  // color each bar
+  const arr_names = Array.from(names);
+  const colors = d3.scaleOrdinal().domain(arr_names).range(d3.schemeTableau10);
 
-  function bars(svg) {
+  // draw bar
+  const bars = useCallback((svg) => {
     let bar = svg.append("g").attr("fill-opacity", 0.6).selectAll("rect");
 
     return ([date, data], transition) =>
@@ -125,7 +107,7 @@ function App() {
           (enter) =>
             enter
               .append("rect")
-              .attr("fill", color())
+              .attr("fill", (d) => colors(d.name))
               .attr("height", y.bandwidth())
               .attr("x", x(0))
               .attr("y", (d) => y((prev.get(d) || d).rank))
@@ -144,9 +126,10 @@ function App() {
             .attr("y", (d) => y(d.rank))
             .attr("width", (d) => x(d.value) - x(0))
         ));
-  }
+  });
 
-  function labels(svg) {
+  // add labels for each bar
+  const labels = useCallback((svg) => {
     let label = svg
       .append("g")
       .style("font", "bold 10px sans-serif")
@@ -212,7 +195,7 @@ function App() {
                 )
             )
         ));
-  }
+  });
 
   const formatNumber = d3.format(",d");
 
@@ -223,7 +206,8 @@ function App() {
     };
   }
 
-  function axis(svg) {
+  // draw axis
+  const axis = useCallback((svg) => {
     const g = svg.append("g").attr("transform", `translate(0,${margin.top})`);
     const axis = d3
       .axisTop(x)
@@ -237,11 +221,11 @@ function App() {
       g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "white");
       g.select(".domain").remove();
     };
-  }
+  });
 
+  // draw date ticker
   const formatDate = d3.timeFormat("%Y");
-
-  function ticker(svg) {
+  const ticker = useCallback((svg) => {
     if (keyframes.length) {
       const now = svg
         .append("text")
@@ -257,10 +241,11 @@ function App() {
         transition.end().then(() => now.text(formatDate(date)));
       };
     }
-  }
+  });
 
+  // create chart
   const iter = useMemo(
-    function* getchart() {
+    function* () {
       const svg = d3.select(ref).attr("viewBox", [0, 0, width, height]);
       svg.selectAll("*").remove();
 
@@ -269,7 +254,6 @@ function App() {
       const updateLabels = labels(svg);
       const updateTicker = ticker(svg);
 
-      yield svg.node();
       for (const keyframe of keyframes) {
         const transition = svg
           .transition()
@@ -282,19 +266,18 @@ function App() {
         updateBars(keyframe, transition);
         updateLabels(keyframe, transition);
         updateTicker(keyframe, transition);
-        // invalidation.then(() => svg.interrupt());
         yield transition.end();
       }
     },
-    [keyframes, ref]
+    [axis, bars, height, keyframes, labels, ref, ticker, x]
   );
 
-  let index = 0;
-  while (index < 20) {
-    iter.next();
-    index++;
-  }
-  console.log("hello");
+  useEffect(() => {
+    const interval = setInterval(() => iter.next(), duration);
+    return () => clearInterval(interval);
+  }, [iter]);
+
+  // console.log("hello");
   return <svg ref={setRef} />;
 }
 
