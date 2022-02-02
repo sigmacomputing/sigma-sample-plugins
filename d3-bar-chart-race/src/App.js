@@ -1,8 +1,9 @@
+import * as React from "react";
 import "./App.css";
 import * as d3 from "d3";
 import { client, useConfig, useElementData } from "@sigmacomputing/plugin";
-import { useCallback, useMemo, useState } from "react";
-import { useEffect } from "react/cjs/react.development";
+import { useCallback, useMemo, useState, useEffect } from "react";
+import styled from "@emotion/styled";
 
 client.config.configureEditorPanel([
   { name: "source", type: "element" },
@@ -32,6 +33,8 @@ function App() {
   const dateData = sigmaData[config.date] ?? [];
   const category = sigmaData[config.category] ?? [];
   const measure = sigmaData[config.value] ?? [];
+
+  const [start, setStart] = useState(false);
 
   // data preprocesing
   const data = convertData(sigmaData, dateData, category, measure);
@@ -224,7 +227,7 @@ function App() {
   });
 
   // draw date ticker
-  const formatDate = d3.timeFormat("%Y");
+  const formatDate = d3.timeFormat("%Y-%m");
   const ticker = useCallback((svg) => {
     if (keyframes.length) {
       const now = svg
@@ -272,13 +275,42 @@ function App() {
     [axis, bars, height, keyframes, labels, ref, ticker, x]
   );
 
+  // useEffect(() => {
+  //   const interval = setInterval(() => iter.next(), duration);
+  //   return () => clearInterval(interval);
+  // }, [iter]);
+
   useEffect(() => {
-    const interval = setInterval(() => iter.next(), duration);
-    return () => clearInterval(interval);
+    if (start) {
+      const interval = setInterval(() => iter.next(), duration);
+      return () => clearInterval(interval);
+    } else {
+      return;
+    }
   }, [iter]);
 
-  // console.log("hello");
-  return <svg ref={setRef} />;
+  const Button = styled("button")`
+    background-color: light-gray;
+    color: -internal-light-dark;
+    font-size: 12px;
+    padding: 8px 8px;
+    border-radius: 5px;
+    margin: 10px 5px;
+  `;
+
+  const ButtonGroup = styled.div`
+    display: flex;
+  `;
+
+  return (
+    <React.Fragment>
+      <ButtonGroup>
+        <Button onClick={() => setStart(true)}>Replay</Button>
+        <Button onClick={() => setStart(false)}>Stop</Button>
+      </ButtonGroup>
+      <svg ref={setRef} />
+    </React.Fragment>
+  );
 }
 
 export default App;
