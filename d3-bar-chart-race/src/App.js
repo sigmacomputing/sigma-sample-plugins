@@ -25,7 +25,6 @@ function convertData(data, dateData, category, measure) {
   }
   return convertedData;
 }
-
 function App() {
   const config = useConfig();
   const sigmaData = useElementData(config.source);
@@ -34,13 +33,15 @@ function App() {
   const category = sigmaData[config.category] ?? [];
   const measure = sigmaData[config.value] ?? [];
 
-  const [start, setStart] = useState(false);
-
   // data preprocesing
   const data = convertData(sigmaData, dateData, category, measure);
   const names = new Set(data.map((d) => d.name));
 
-  const n = Math.min(names.size, config.rank);
+  let n = names.size;
+  if (config.rank) {
+    n = Math.min(names.size, config.rank);
+  }
+
   const margin = { top: 30, right: 30, bottom: 10, left: 0 };
   const barSize = 30;
   const height = margin.top + barSize * n + margin.bottom;
@@ -100,153 +101,167 @@ function App() {
   const colors = d3.scaleOrdinal().domain(arr_names).range(d3.schemeTableau10);
 
   // draw bar
-  const bars = useCallback((svg) => {
-    let bar = svg.append("g").attr("fill-opacity", 0.6).selectAll("rect");
+  const bars = useCallback(
+    (svg) => {
+      let bar = svg.append("g").attr("fill-opacity", 0.6).selectAll("rect");
 
-    return ([date, data], transition) =>
-      (bar = bar
-        .data(data.slice(0, n), (d) => d.name)
-        .join(
-          (enter) =>
-            enter
-              .append("rect")
-              .attr("fill", (d) => colors(d.name))
-              .attr("height", y.bandwidth())
-              .attr("x", x(0))
-              .attr("y", (d) => y((prev.get(d) || d).rank))
-              .attr("width", (d) => x((prev.get(d) || d).value) - x(0)),
-          (update) => update,
-          (exit) =>
-            exit
+      return ([date, data], transition) =>
+        (bar = bar
+          .data(data.slice(0, n), (d) => d.name)
+          .join(
+            (enter) =>
+              enter
+                .append("rect")
+                .attr("fill", (d) => colors(d.name))
+                .attr("height", y.bandwidth())
+                .attr("x", x(0))
+                .attr("y", (d) => y((prev.get(d) || d).rank))
+                .attr("width", (d) => x((prev.get(d) || d).value) - x(0)),
+            (update) => update,
+            (exit) =>
+              exit
+                .transition(transition)
+                .remove()
+                .attr("y", (d) => y((next.get(d) || d).rank))
+                .attr("width", (d) => x((next.get(d) || d).value) - x(0))
+          )
+          .call((bar) =>
+            bar
               .transition(transition)
-              .remove()
-              .attr("y", (d) => y((next.get(d) || d).rank))
-              .attr("width", (d) => x((next.get(d) || d).value) - x(0))
-        )
-        .call((bar) =>
-          bar
-            .transition(transition)
-            .attr("y", (d) => y(d.rank))
-            .attr("width", (d) => x(d.value) - x(0))
-        ));
-  });
+              .attr("y", (d) => y(d.rank))
+              .attr("width", (d) => x(d.value) - x(0))
+          ));
+    },
+    [n, prev, next, colors, x, y]
+  );
+
+  const formatNumber = d3.format(",d");
+  const textTween = useCallback(
+    (a, b) => {
+      const i = d3.interpolateNumber(a, b);
+      return function (t) {
+        this.textContent = formatNumber(i(t));
+      };
+    },
+    [formatNumber]
+  );
 
   // add labels for each bar
-  const labels = useCallback((svg) => {
-    let label = svg
-      .append("g")
-      .style("font", "bold 10px sans-serif")
-      .style("font-variant-numeric", "tabular-nums")
-      .attr("text-anchor", "end")
-      .selectAll("text");
+  const labels = useCallback(
+    (svg) => {
+      let label = svg
+        .append("g")
+        .style("font", "bold 10px sans-serif")
+        .style("font-variant-numeric", "tabular-nums")
+        .attr("text-anchor", "end")
+        .selectAll("text");
 
-    return ([date, data], transition) =>
-      (label = label
-        .data(data.slice(0, n), (d) => d.name)
-        .join(
-          (enter) =>
-            enter
-              .append("text")
-              .attr(
-                "transform",
-                (d) =>
-                  `translate(${x((prev.get(d) || d).value)},${y(
-                    (prev.get(d) || d).rank
-                  )})`
-              )
-              .attr("y", y.bandwidth() / 2)
-              .attr("x", -6)
-              .attr("dy", "-0.25em")
-              .text((d) => d.name)
-              .call((text) =>
-                text
-                  .append("tspan")
-                  .attr("fill-opacity", 0.6)
-                  .attr("font-weight", "normal")
-                  .attr("x", -6)
-                  .attr("dy", "1.15em")
-              ),
-          (update) => update,
-          (exit) =>
-            exit
+      return ([date, data], transition) =>
+        (label = label
+          .data(data.slice(0, n), (d) => d.name)
+          .join(
+            (enter) =>
+              enter
+                .append("text")
+                .attr(
+                  "transform",
+                  (d) =>
+                    `translate(${x((prev.get(d) || d).value)},${y(
+                      (prev.get(d) || d).rank
+                    )})`
+                )
+                .attr("y", y.bandwidth() / 2)
+                .attr("x", -6)
+                .attr("dy", "-0.25em")
+                .text((d) => d.name)
+                .call((text) =>
+                  text
+                    .append("tspan")
+                    .attr("fill-opacity", 0.6)
+                    .attr("font-weight", "normal")
+                    .attr("x", -6)
+                    .attr("dy", "1.15em")
+                ),
+            (update) => update,
+            (exit) =>
+              exit
+                .transition(transition)
+                .remove()
+                .attr(
+                  "transform",
+                  (d) =>
+                    `translate(${x((next.get(d) || d).value)},${y(
+                      (next.get(d) || d).rank
+                    )})`
+                )
+                .call((g) =>
+                  g
+                    .select("tspan")
+                    .tween("text", (d) =>
+                      textTween(d.value, (next.get(d) || d).value)
+                    )
+                )
+          )
+          .call((bar) =>
+            bar
               .transition(transition)
-              .remove()
-              .attr(
-                "transform",
-                (d) =>
-                  `translate(${x((next.get(d) || d).value)},${y(
-                    (next.get(d) || d).rank
-                  )})`
-              )
+              .attr("transform", (d) => `translate(${x(d.value)},${y(d.rank)})`)
               .call((g) =>
                 g
                   .select("tspan")
                   .tween("text", (d) =>
-                    textTween(d.value, (next.get(d) || d).value)
+                    textTween((prev.get(d) || d).value, d.value)
                   )
               )
-        )
-        .call((bar) =>
-          bar
-            .transition(transition)
-            .attr("transform", (d) => `translate(${x(d.value)},${y(d.rank)})`)
-            .call((g) =>
-              g
-                .select("tspan")
-                .tween("text", (d) =>
-                  textTween((prev.get(d) || d).value, d.value)
-                )
-            )
-        ));
-  });
-
-  const formatNumber = d3.format(",d");
-
-  function textTween(a, b) {
-    const i = d3.interpolateNumber(a, b);
-    return function (t) {
-      this.textContent = formatNumber(i(t));
-    };
-  }
+          ));
+    },
+    [n, prev, next, textTween, x, y]
+  );
 
   // draw axis
-  const axis = useCallback((svg) => {
-    const g = svg.append("g").attr("transform", `translate(0,${margin.top})`);
-    const axis = d3
-      .axisTop(x)
-      .ticks(width / 150)
-      .tickSizeOuter(0)
-      .tickSizeInner(-barSize * (n + y.padding()));
+  const axis = useCallback(
+    (svg) => {
+      const g = svg.append("g").attr("transform", `translate(0,${margin.top})`);
+      const axis = d3
+        .axisTop(x)
+        .ticks(width / 150)
+        .tickSizeOuter(0)
+        .tickSizeInner(-barSize * (n + y.padding()));
 
-    return (_, transition) => {
-      g.transition(transition).call(axis);
-      g.select(".tick:first-of-type text").remove();
-      g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "white");
-      g.select(".domain").remove();
-    };
-  });
+      return (_, transition) => {
+        g.transition(transition).call(axis);
+        g.select(".tick:first-of-type text").remove();
+        g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "white");
+        g.select(".domain").remove();
+      };
+    },
+    [margin, x, y, n]
+  );
 
   // draw date ticker
   const formatDate = d3.timeFormat("%Y-%m");
-  const ticker = useCallback((svg) => {
-    if (keyframes.length) {
-      const now = svg
-        .append("text")
-        .style("font", `bold ${barSize}px sans-serif`)
-        .style("font-variant-numeric", "tabular-nums")
-        .attr("text-anchor", "end")
-        .attr("x", width - 30)
-        .attr("y", margin.top + barSize * (n - 0.45))
-        .attr("dy", "0.32em")
-        .text(formatDate(keyframes[0][0]));
+  const ticker = useCallback(
+    (svg) => {
+      if (keyframes.length) {
+        const now = svg
+          .append("text")
+          .style("font", `bold ${barSize}px sans-serif`)
+          .style("font-variant-numeric", "tabular-nums")
+          .attr("text-anchor", "end")
+          .attr("x", width - 30)
+          .attr("y", margin.top + barSize * (n - 0.45))
+          .attr("dy", "0.32em")
+          .text(formatDate(keyframes[0][0]));
 
-      return ([date], transition) => {
-        transition.end().then(() => now.text(formatDate(date)));
-      };
-    }
-  });
+        return ([date], transition) => {
+          transition.end().then(() => now.text(formatDate(date)));
+        };
+      }
+    },
+    [margin, keyframes, formatDate, n]
+  );
 
-  // create chart
+  //   // create chart
   const iter = useMemo(
     function* () {
       const svg = d3.select(ref).attr("viewBox", [0, 0, width, height]);
@@ -275,19 +290,18 @@ function App() {
     [axis, bars, height, keyframes, labels, ref, ticker, x]
   );
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => iter.next(), duration);
-  //   return () => clearInterval(interval);
-  // }, [iter]);
+  let intervalId;
 
-  useEffect(() => {
-    if (start) {
-      const interval = setInterval(() => iter.next(), duration);
-      return () => clearInterval(interval);
-    } else {
-      return;
+  function startIter() {
+    if (!intervalId) {
+      intervalId = setInterval(() => iter.next(), duration);
     }
-  }, [iter]);
+  }
+
+  function pauseIter() {
+    clearInterval(intervalId);
+    intervalId = null;
+  }
 
   const Button = styled("button")`
     background-color: light-gray;
@@ -305,8 +319,8 @@ function App() {
   return (
     <React.Fragment>
       <ButtonGroup>
-        <Button onClick={() => setStart(true)}>Replay</Button>
-        <Button onClick={() => setStart(false)}>Stop</Button>
+        <Button onClick={startIter}>Start</Button>
+        <Button onClick={pauseIter}>Pause</Button>
       </ButtonGroup>
       <svg ref={setRef} />
     </React.Fragment>
