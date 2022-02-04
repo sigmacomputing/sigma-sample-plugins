@@ -261,7 +261,7 @@ function App() {
     [margin, keyframes, formatDate, n]
   );
 
-  //   // create chart
+  // create chart
   const iter = useMemo(
     function* () {
       const svg = d3.select(ref).attr("viewBox", [0, 0, width, height]);
@@ -291,7 +291,6 @@ function App() {
   );
 
   let intervalId;
-
   function startIter() {
     if (!intervalId) {
       intervalId = setInterval(() => iter.next(), duration);
@@ -302,6 +301,18 @@ function App() {
     clearInterval(intervalId);
     intervalId = null;
   }
+
+  let [replay, setReplay] = useState(false);
+
+  useEffect(() => {
+    let interval;
+    if (replay) {
+      interval = setInterval(() => iter.next(), duration);
+      return () => clearInterval(interval);
+    } else {
+      return;
+    }
+  }, [replay, iter]);
 
   const Button = styled("button")`
     background-color: light-gray;
@@ -319,8 +330,15 @@ function App() {
   return (
     <React.Fragment>
       <ButtonGroup>
-        <Button onClick={startIter}>Start</Button>
-        <Button onClick={pauseIter}>Pause</Button>
+        <Button onClick={() => setReplay(!replay)}>
+          {replay ? "Stop" : "Replay"}
+        </Button>
+        <Button disabled={replay ? true : false} onClick={startIter}>
+          Start
+        </Button>
+        <Button disabled={replay ? true : false} onClick={pauseIter}>
+          Pause
+        </Button>
       </ButtonGroup>
       <svg ref={setRef} />
     </React.Fragment>
