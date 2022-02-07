@@ -1,7 +1,12 @@
 import * as React from "react";
 import "./App.css";
 import * as d3 from "d3";
-import { client, useConfig, useElementData } from "@sigmacomputing/plugin";
+import {
+  client,
+  useConfig,
+  useElementData,
+  useElementColumns,
+} from "@sigmacomputing/plugin";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import styled from "@emotion/styled";
 
@@ -27,6 +32,7 @@ function convertData(data, dateData, category, measure) {
 }
 function App() {
   const config = useConfig();
+  const columns = useElementColumns(config.source);
   const sigmaData = useElementData(config.source);
   const [ref, setRef] = useState();
   const dateData = sigmaData[config.date] ?? [];
@@ -239,7 +245,22 @@ function App() {
   );
 
   // draw date ticker
-  const formatDate = d3.timeFormat("%Y-%m");
+  function formatGroupingDate() {
+    const columnName = columns[config.date]["name"];
+    let formatDate;
+    if (columnName.indexOf("Year") !== -1) {
+      formatDate = d3.timeFormat("%Y");
+    } else if (
+      columnName.indexOf("Month") !== -1 ||
+      columnName.indexOf("Quarter") !== -1
+    ) {
+      formatDate = d3.timeFormat("%Y-%m");
+    } else {
+      formatDate = d3.timeFormat("%Y-%m-%d");
+    }
+    return formatDate;
+  }
+
   const ticker = useCallback(
     (svg) => {
       if (keyframes.length) {
@@ -251,14 +272,14 @@ function App() {
           .attr("x", width - 30)
           .attr("y", margin.top + barSize * (n - 0.45))
           .attr("dy", "0.32em")
-          .text(formatDate(keyframes[0][0]));
+          .text(formatGroupingDate()(keyframes[0][0]));
 
         return ([date], transition) => {
-          transition.end().then(() => now.text(formatDate(date)));
+          transition.end().then(() => now.text(formatGroupingDate()(date)));
         };
       }
     },
-    [margin, keyframes, formatDate, n]
+    [margin, keyframes, n]
   );
 
   // create chart
