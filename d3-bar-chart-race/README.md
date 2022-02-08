@@ -1,70 +1,67 @@
-# Getting Started with Create React App
+# Getting Started with Sigma Plugins
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Running This React App
 
-In the project directory, you can run:
+If this is your first time running this app, navigate to the project directory and run the following command via your terminal:
 
-### `npm start`
+### `yarn`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Installs all necessary dependencies.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- You may skip this step if you have already run this command for this app previously.
 
-### `npm test`
+After this, while still in the project directory, you can run:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `yarn start`
 
-### `npm run build`
+- Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- The page will reload if you make edits. You will also see any lint errors in the console.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+&nbsp;
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Using This App as a Sigma Plugin
 
-### `npm run eject`
+1. Start off by creating a new workbook or opening an existing workbook. Make sure that your workbook has a data table in it that the plugin can read from.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Open the "Add element..." tab in the sidebar and add a Plugin (under "UI Elements").
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   <img src="readme_images/add-element.png" alt="screenshot of 'Add element...' tab on the top left section of the workbook view" width="300">
+   <img src="readme_images/plugin.png" alt="screenshot of Plugin element under 'UI Elements' section" height="400" align="top">
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Select the "Sigma Plugin Dev Playground" plugin, which plugin developers should have access to. Please contact your Organization Administrator if you cannot find this.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   <img src="readme_images/sigma-plugin-dev-playground.png" alt="screenshot of 'Sigma Plugin Dev Playground' selection" width="250">
+
+4. Select your source data table by selecting it in the "Select..." dropdown menu
+
+   <img src="readme_images/select-source.png" alt="screenshot of 'Select...' dropdown" width="300">
+
+5. If you have groupings in your data table that you wish for this plugin to take into account, select an option from the "Aggregation Level" dropdown menu.
+
+   <img src="readme_images/aggregation-level.png" alt="screenshot of aggregation level dropdown" width="300">
+
+6. Select your date, category and value by clicking on the "+" symbol next to these categories.
+
+   <img src="readme_images/add-date.png" alt="screenshot of dimension column selection" height="300">
+   <img src="readme_images/add-category.png" alt="screenshot of dimension column selection" height="300">
+   <img src="readme_images/add-value.png" alt="screenshot of dimension column selection" height="300">
+
+   Click on the "Replay" button and you should be able to view the bar chart race animation! You can also stop the animation by click on the "Stop". If you want to pause and resume an animation, you can click the "Start" and "Pause" buttons separately.
+
+   <img src="readme_images/bar-chart-race-sample.png" alt="screenshot of bar chart plugin with all steps completed" width="700">
+
+7. You can also customize the ranking by enter the rank value and save it.
+   <img src="readme_images/add-rank.png" alt="screenshot of dimension column selection" height="200">
+
+8. You can change the grouping type of date by truncating date to year, month or day, the bar-chart-race will be displayed according to the changed type.
+
+   <img src="readme_images/truncate-date.png" alt="screenshot of dimension column selection" height="400">
 
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
