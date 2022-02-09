@@ -30,6 +30,7 @@ function convertData(data, dateData, category, measure) {
   }
   return convertedData;
 }
+
 function App() {
   const config = useConfig();
   const columns = useElementColumns(config.source);
@@ -42,12 +43,10 @@ function App() {
   // data preprocesing
   const data = convertData(sigmaData, dateData, category, measure);
   const names = new Set(data.map((d) => d.name));
-
   let n = names.size;
   if (config.rank) {
     n = Math.min(names.size, config.rank);
   }
-
   const margin = { top: 30, right: 30, bottom: 10, left: 0 };
   const barSize = 30;
   const height = margin.top + barSize * n + margin.bottom;
@@ -244,7 +243,7 @@ function App() {
     [margin, x, y, n]
   );
 
-  // draw date ticker
+  // format date
   function formatGroupingDate() {
     const columnName = columns[config.date]["name"];
     let formatDate;
@@ -261,6 +260,7 @@ function App() {
     return formatDate;
   }
 
+  // draw date ticker
   const ticker = useCallback(
     (svg) => {
       if (keyframes.length) {
@@ -283,34 +283,33 @@ function App() {
   );
 
   // create chart
-  const iter = useMemo(
-    function* () {
-      const svg = d3.select(ref).attr("viewBox", [0, 0, width, height]);
-      svg.selectAll("*").remove();
+  function* myGenerator() {
+    const svg = d3.select(ref).attr("viewBox", [0, 0, width, height]);
+    svg.selectAll("*").remove();
 
-      const updateBars = bars(svg);
-      const updateAxis = axis(svg);
-      const updateLabels = labels(svg);
-      const updateTicker = ticker(svg);
+    const updateBars = bars(svg);
+    const updateAxis = axis(svg);
+    const updateLabels = labels(svg);
+    const updateTicker = ticker(svg);
 
-      for (const keyframe of keyframes) {
-        const transition = svg
-          .transition()
-          .duration(duration)
-          .ease(d3.easeLinear);
-        // Extract the top bar’s value.
-        x.domain([0, keyframe[1][0].value]);
+    for (const keyframe of keyframes) {
+      const transition = svg
+        .transition()
+        .duration(duration)
+        .ease(d3.easeLinear);
 
-        updateAxis(keyframe, transition);
-        updateBars(keyframe, transition);
-        updateLabels(keyframe, transition);
-        updateTicker(keyframe, transition);
-        yield transition.end();
-      }
-    },
-    [axis, bars, height, keyframes, labels, ref, ticker, x]
-  );
+      // Extract the top bar’s value.
+      x.domain([0, keyframe[1][0].value]);
 
+      updateAxis(keyframe, transition);
+      updateBars(keyframe, transition);
+      updateLabels(keyframe, transition);
+      updateTicker(keyframe, transition);
+      yield transition.end();
+    }
+  }
+
+  const iter = myGenerator();
   let intervalId;
   function startIter() {
     if (!intervalId) {

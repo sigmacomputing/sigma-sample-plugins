@@ -53,7 +53,7 @@ After this, while still in the project directory, you can run:
 
    <img src="readme_images/bar-chart-race-sample.png" alt="screenshot of bar chart plugin with all steps completed" width="700">
 
-7. You can also customize the ranking by enter the rank value and save it.
+7. You can also customize the ranking by entering the ranking and saving it.
    <img src="readme_images/add-rank.png" alt="screenshot of dimension column selection" height="200">
 
 8. You can change the grouping type of date by truncating date to year, month or day, the bar-chart-race will be displayed according to the changed type.
