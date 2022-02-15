@@ -49,7 +49,7 @@ After this, while still in the project directory, you can run:
    <img src="readme_images/add-category.png" alt="screenshot of dimension column selection" height="300">
    <img src="readme_images/add-value.png" alt="screenshot of dimension column selection" height="300">
 
-   Click on the "Replay" button and you should be able to view the bar chart race animation! You can also stop the animation by click on the "Stop". If you want to pause and resume an animation, you can click the "Start" and "Pause" buttons separately.
+   Click on the "Replay" button and you should be able to view the bar chart race animation! You can also pause the animation by clicking on the "Pause". If you want to resume an animation, you can click the "Start".
 
    <img src="readme_images/bar-chart-race-sample.png" alt="screenshot of bar chart plugin with all steps completed" width="700">
 
