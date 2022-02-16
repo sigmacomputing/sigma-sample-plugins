@@ -15,13 +15,13 @@ const StyledButtonGroup = styled.div`
 `;
 
 function ButtonGroup(props) {
-  const { startIter, pauseIter, replay, setReplay } = props;
+  const { startIter, pauseIter, replayIter } = props;
 
   return (
     <StyledButtonGroup>
-      <Button onClick={startIter}>start</Button>
-      <Button onClick={pauseIter}>pause</Button>
-      <Button onClick={() => setReplay(!replay)}>Replay</Button>
+      <Button onClick={startIter}>Start</Button>
+      <Button onClick={pauseIter}>Pause</Button>
+      <Button onClick={replayIter}>Replay</Button>
     </StyledButtonGroup>
   );
 }

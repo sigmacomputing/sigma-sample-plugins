@@ -7,8 +7,9 @@ import {
   useElementData,
   useElementColumns,
 } from "@sigmacomputing/plugin";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import ButtonGroup from "./ButtonGroup";
+import { useCallback } from "react/cjs/react.development";
 
 client.config.configureEditorPanel([
   { name: "source", type: "element" },
@@ -308,8 +309,6 @@ function App() {
   const sigmaData = useElementData(config.source);
   const [ref, setRef] = useState();
   const [iter, setIter] = useState(null);
-  const [replay, setReplay] = useState(false);
-  const [firstClick, setFirstClick] = useState(true);
   const transformedData = useMemo(
     () => transform(config, columns, sigmaData),
     [config, columns, sigmaData]
@@ -320,38 +319,33 @@ function App() {
     [transformedData, ref]
   );
 
-  if (replay) {
-    setFirstClick(false);
-    setReplay(!replay);
+  const intervalIdRef = useRef();
+  const startIter = useCallback(() => {
+    intervalIdRef.current = setInterval(() => iter.next(), duration);
+  }, [iter]);
+
+  function pauseIter() {
+    clearInterval(intervalIdRef.current);
+  }
+
+  const callReplayIter = useRef(false);
+  function replayIter() {
+    callReplayIter.current = true;
     setIter(getChart(transformedData, ref));
   }
 
-  let intervalId;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  function startIter() {
-    if (!intervalId) {
-      intervalId = setInterval(() => iter.next(), duration);
-    }
-  }
-
-  function pauseIter() {
-    clearInterval(intervalId);
-    intervalId = null;
-  }
-
   useEffect(() => {
-    if (!firstClick) {
+    if (callReplayIter.current) {
       startIter();
     }
-  }, [firstClick, startIter]);
+  }, [startIter]);
 
   return (
     <React.Fragment>
       <ButtonGroup
         startIter={startIter}
         pauseIter={pauseIter}
-        replay={replay}
-        setReplay={setReplay}
+        replayIter={replayIter}
       ></ButtonGroup>
       <svg ref={setRef} />
     </React.Fragment>
