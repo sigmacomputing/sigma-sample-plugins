@@ -1477,9 +1477,9 @@
     picomatch "^2.2.2"
 
 "@sigmacomputing/plugin@^0.6.43":
-  version "0.6.43"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.6.43.tgz#e1a6aeca45551e09e1fe399bc75e0d2875fa2cd1"
-  integrity sha512-ygrpJacwajW3thYLGGIfmYVNDwX9aKS93ymAspTHMJl0m9ptXkcDM3G+MIeW1Asll2H7saeN9vpT5u0z0Z5ysA==
+  version "0.6.78"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.6.78.tgz#bfc958c34c6b31e74741a0b72b5b1c875127e116"
+  integrity sha512-pQXl9uO+MhNuXiQalshNY/ia8JPObRQFelbX1DkkJlhQV/p0NM01IzmZk3/oggyIWEHQKt/vz7mn+t7h+MtRVA==
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
