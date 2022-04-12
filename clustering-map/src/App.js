@@ -11,8 +11,8 @@ import Map from './components/Map';
 
 client.config.configureEditorPanel([
   { name: "source", type: "element" },
-  { name: "Latitude", type: "column", source: "source", allowMultiple: false },
-  { name: "Longitude", type: "column", source: "source", allowMultiple: false },
+  { name: "Latitude", type: "column", source: "source", allowMultiple: false, allowedTypes: ['number', 'integer'] },
+  { name: "Longitude", type: "column", source: "source", allowMultiple: false, allowedTypes: ['number', 'integer'] },
   { name: "Fields", type: "column", source: "source", allowMultiple: true },
   { name: "Cluster scale", type: "text", placeholder: '1 to 100' },
 ]);
