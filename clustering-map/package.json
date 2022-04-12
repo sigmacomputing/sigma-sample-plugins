@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@sigmacomputing/plugin": "^0.6.43",
+    "@sigmacomputing/plugin": "^0.6.92",
+    "copy-to-clipboard": "^3.3.1",
+    "deck.gl": "8.3.11",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^1.0.1",
     "react-map-gl": "^6.1.1",
-    "deck.gl": "8.3.11",
+    "react-scripts": "4.0.3",
     "supercluster": "^7.1.4",
-    "copy-to-clipboard": "^3.3.1"
+    "web-vitals": "^1.0.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",

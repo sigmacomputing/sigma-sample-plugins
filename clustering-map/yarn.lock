@@ -1880,10 +1880,17 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@sigmacomputing/plugin@^0.6.43":
-  version "0.6.43"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.6.43.tgz#e1a6aeca45551e09e1fe399bc75e0d2875fa2cd1"
-  integrity sha512-ygrpJacwajW3thYLGGIfmYVNDwX9aKS93ymAspTHMJl0m9ptXkcDM3G+MIeW1Asll2H7saeN9vpT5u0z0Z5ysA==
+"@sigmacomputing/plugin-types@^0.6.87":
+  version "0.6.88"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin-types/-/plugin-types-0.6.88.tgz#e364605c4a0b8883f6eff63dc2555302c2807666"
+  integrity sha512-REp0VBx6D1VOvxdEZxZNUXvwd6Fsv8lzs/eoWMkbbE2uqoj9L585Xsz3ImE7wc2y2MgsgaND41k2JoacuwyEJQ==
+
+"@sigmacomputing/plugin@^0.6.92":
+  version "0.6.92"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.6.92.tgz#cbfc27af75335faa8127af29bdfa40bf54c503ae"
+  integrity sha512-LZVkGfYLY32U9cMMH24M2mMvjHA5fL+fFfUvBCbpAjmoGhApQQGwAtn2CzZvFwjdoPTBtLC3819YQtMH3KSsvg==
+  dependencies:
+    "@sigmacomputing/plugin-types" "^0.6.87"
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
