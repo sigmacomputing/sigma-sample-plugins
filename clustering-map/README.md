@@ -1,4 +1,5 @@
 # Getting Started with Clustering Map Plugin
+This plugin is available on: `https://clustering-map-8a23e2.netlify.app`. You may configure this URL as the production URL of a plugin from the Administration Panel.
 
 ## Running/Developing This React App
 
