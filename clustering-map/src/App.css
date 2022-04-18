@@ -1,0 +1,111 @@
+.App {
+  text-align: center;
+}
+
+.tooltip {
+  background-color: #0a0a0a;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 3px;
+  font-size: 12px;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.tooltip.interactive {
+  background-color: white;
+  color: #0a0a0a;
+}
+
+.tooltip.interactive .tooltipPoint {
+  font-weight: bold;
+}
+
+.tooltipPoint,
+.tooltipDetails {
+  text-align: left;
+}
+
+.tooltipDetails:not(:last-child) {
+  margin-bottom: 0.25rem;
+}
+
+.contextMenu {
+  background-color: white;
+  color: #0a0a0a;
+  padding: 0;
+  margin: 0;
+  border-radius: 3px;
+  font-size: 14px;
+  list-style-type: none;
+}
+
+.contextMenu li {
+  cursor: pointer;
+  padding: 8px 6px;
+}
+
+.contextMenu li:hover {
+  background-color: #f3f3f3;
+}
+
+.iconsSection {
+  position: absolute;
+  right: 16px;
+  bottom: 36px;
+  display: flex;
+  flex-direction: column;
+}
+
+.iconsSection .icons {
+  border: 1px solid #dadada;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.iconsSection .icons button {
+  position: relative;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #0a0a0a;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.iconsSection .icons .divider {
+  background: #dadada;
+  height: 1px;
+  margin: auto 0;
+}
+
+.iconsSection .icons button svg {
+  width: 24px;
+  height: 24px;
+  opacity: 0.85;
+}
+
+.iconsSection .icons button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 2px;
+  background-color: currentColor;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.iconsSection .icons button:hover::after {
+  opacity: 0.08;
+}
+
+.iconsSection .icons button:active::after {
+  opacity: 0.14;
+}
