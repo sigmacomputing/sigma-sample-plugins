@@ -11,7 +11,8 @@
     "react-map-gl": "^6.1.1",
     "react-scripts": "4.0.3",
     "supercluster": "^7.1.4",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "worker-loader": "^3.0.8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",
