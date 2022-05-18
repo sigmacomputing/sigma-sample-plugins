@@ -9,14 +9,18 @@ const SPAN_START = /^(.*)StartTime$/
 const SPAN_END = /^(.*)EndTime$/
 
 
-function transform(data, columnInfo, percentile) {
+function transform(marks, data, columnInfo, percentile) {
   const aggregatedData = {};
-  for (const [colId, colValues] of Object.entries(data)) {
+  for (const colId of marks) {
+    const colValues = data[colId];
+    if (!colValues) continue;
     aggregatedData[colId] = p(colValues.filter(v => v != null), percentile);
   }
   const timeSpans = {};
   let domain = [0,0];
-  for (const [colId, colInfo] of Object.entries(columnInfo)) {
+  for (const colId of marks) {
+    const colInfo = columnInfo[colId];
+    if (!colInfo) continue;
     const spanStartMatch = SPAN_START.exec(colInfo.name);
     const spanEndMatch = SPAN_END.exec(colInfo.name);
     if (spanStartMatch) {
@@ -61,6 +65,7 @@ function App() {
     { name: "marks", type: "column", source: "source", allowMultiple: true },
     { name: "percentile", type: "dropdown", source: "source", values: [.25, .50, .75, .95]},
   ]);
+  const marks = useConfig('marks');
   const source = useConfig('source');
   const percentile = useConfig('percentile');
   const columnInfo = useElementColumns(source);
@@ -68,8 +73,8 @@ function App() {
   const ref = useRef();
 
   useEffect(() => {
-    renderTimeline(transform(data, columnInfo, percentile), ref);
-  }, [columnInfo, data, percentile]);
+    renderTimeline(transform(marks, data, columnInfo, percentile ?? 0.5), ref);
+  }, [columnInfo, data, marks, percentile]);
 
   return <div ref={ref} />;
 }
