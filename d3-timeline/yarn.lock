@@ -1525,17 +1525,14 @@
   integrity sha512-WiBSI6JBIhC6LRIsB2Kwh8DsGTlbBU+mLRxJmAe3LjHTdkDpwIbEOZgoXBbZilk/vlfjK8i6nKRAvIRn1XaIMw==
 
 "@sigmacomputing/plugin-types@^0.7.17":
-  version "0.7.16"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin-types/-/plugin-types-0.7.16.tgz#3b65a92f324113982690f9a74fba62ea143b00e4"
-  integrity sha512-9MiDKZgdSHwkG5Pq5L63QC7F/z5fbOqoZUqTS4mijus0OxWZM5o9ae48WI9JjcEyr8Jg6ArjkhnkAN2yU6yI5A==
-
-"@sigmacomputing/plugin@/Users/xiaoyu/sigma/slate/packages/plugin":
   version "0.7.17"
-  dependencies:
-    "@sigmacomputing/plugin-types" "^0.7.17"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin-types/-/plugin-types-0.7.17.tgz#38b70a04e3d002d4274bc2d15301c1332d71eab6"
+  integrity sha512-mS5Hdu2QOAvan8AhmeLrFKDxqZO+ZcBXIO9v5kRLmbxgPkz6elrDr8TjzcOI3EwmOiWJSZB8UKGxoY//fqg3lA==
 
-"@sigmacomputing/plugin@file:../../slate/packages/plugin":
+"@sigmacomputing/plugin@^0.7.17":
   version "0.7.17"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.7.17.tgz#016d730f567259aaf6d6cb04b22d7239c5d6310a"
+  integrity sha512-4orW6wv+x7kSZKPFQYPqKK0yyIWz9vUQexM0RhDWAEV7FXolup8ApqRcHXjumplY1CMxq/LXrdPnbvd0CrW4cA==
   dependencies:
     "@sigmacomputing/plugin-types" "^0.7.17"
 
