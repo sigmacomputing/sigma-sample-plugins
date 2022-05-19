@@ -56,6 +56,7 @@ function renderTimeline(datum, ref) {
     .xTickFormat(x => +x)
     .timeFormat('%Q')
     .enableAnimations(false)
+    .zColorScale(c => d3.interpolateBlues(c / 2 + 0.5))
     .data(datum)(ref.current);
 }
 
