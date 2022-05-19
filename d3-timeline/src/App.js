@@ -9,8 +9,6 @@ import {
 } from "@sigmacomputing/plugin";
 import timeline from "timelines-chart";
 import { useEffect, useRef } from "react";
-import min from "aggregatejs/min";
-import max from "aggregatejs/max";
 
 const SPAN_START = /^(.*)StartTime$/;
 const SPAN_END = /^(.*)EndTime$/;
@@ -18,14 +16,10 @@ const SPAN_END = /^(.*)EndTime$/;
 function transform(marks, data, columnInfo, percentile) {
   const aggregatedData = {};
   for (const colId of marks) {
-    const numRows = data[colId]?.length;
-    if (!numRows) continue;
-
-    const colValues = data[colId].filter((v) => v != null);
+    const colValues = data[colId];
     if (!colValues) continue;
-    const domain = d3.scaleLinear().domain([0, numRows]).range([min(colValues), max(colValues)]);
     aggregatedData[colId] = p(
-      new Array(numRows).fill(0).map((_, index) => domain(index)),
+      colValues.filter((v) => v == null ? 0 : v),
       percentile
     );
   }
