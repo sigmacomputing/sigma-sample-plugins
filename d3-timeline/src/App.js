@@ -19,7 +19,7 @@ function transform(marks, data, columnInfo, percentile) {
     const colValues = data[colId];
     if (!colValues) continue;
     aggregatedData[colId] = p(
-      colValues.filter((v) => v != null),
+      colValues.map((v) => v == null ? 0 : v),
       percentile
     );
   }
