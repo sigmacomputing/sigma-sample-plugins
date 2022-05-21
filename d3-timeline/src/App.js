@@ -72,7 +72,7 @@ function renderTimeline(datum, ref, domain) {
     .zColorScale(d3.scaleLinear().domain(domain).range(['#90c2de', '#08306b']))
     .zScaleLabel('ms')
     .enableOverview(false)
-    .segmentTooltipContent(d => `<b>${d.label}</b>: ${d.timeRange[1] - d.timeRange[0]}ms (${d.val / domain[1] * 100}%)`)
+    .segmentTooltipContent(d => `<b>${d.label}</b>: ${d.timeRange[1] - d.timeRange[0]}ms (${(d.val / domain[1] * 100).toFixed(2)}%)`)
     .maxLineHeight(24)
     .rightMargin(150)
     .data(datum)(ref.current);
