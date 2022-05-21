@@ -52,16 +52,16 @@ function transform(marks, data, columnInfo, percentile) {
         data: [
           {
             timeRange,
-            val: (timeRange[1] - timeRange[0]) / (domain[1] - domain[0])
+            val: timeRange[1] - timeRange[0]
           },
         ],
       })),
     },
   ];
-  return out;
+  return [out, domain];
 }
 
-function renderTimeline(datum, ref) {
+function renderTimeline(datum, ref, domain) {
   if (!ref.current) return;
   d3.select(ref.current).selectAll("*").remove();
   timeline()
@@ -69,7 +69,12 @@ function renderTimeline(datum, ref) {
     .timeFormat("%Q")
     .enableAnimations(false)
     .zQualitative(false)
-    .zColorScale(d3.scaleLinear().domain([0, 1]).range(['#90c2de', '#08306b']))
+    .zColorScale(d3.scaleLinear().domain(domain).range(['#90c2de', '#08306b']))
+    .zScaleLabel('ms')
+    .enableOverview(false)
+    .segmentTooltipContent(d => `<b>${d.label}</b>: ${d.timeRange[1] - d.timeRange[0]}ms (${d.val / domain[1] * 100}%)`)
+    .maxLineHeight(24)
+    .rightMargin(150)
     .data(datum)(ref.current);
 }
 
@@ -92,7 +97,8 @@ function App() {
   const ref = useRef();
 
   useEffect(() => {
-    renderTimeline(transform(marks, data, columnInfo, percentile ?? 0.5), ref);
+    const [transformedData, domain] = transform(marks, data, columnInfo, percentile ?? 0.5);
+    renderTimeline(transformedData, ref, domain);
   }, [columnInfo, data, marks, percentile]);
 
   return <div ref={ref} />;
