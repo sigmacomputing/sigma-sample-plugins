@@ -64,18 +64,23 @@ function transform(marks, data, columnInfo, percentile) {
 function renderTimeline(datum, ref, domain) {
   if (!ref.current) return;
   d3.select(ref.current).selectAll("*").remove();
-  timeline()
+  const profiler = timeline()
     .xTickFormat((x) => +x)
     .timeFormat("%Q")
     .enableAnimations(false)
     .zQualitative(false)
-    .zColorScale(d3.scaleLinear().domain(domain).range(['#90c2de', '#08306b']))
+    .zColorScale(d3.scalePow().domain(domain).range(['#90c2de', '#08306b']))
     .zScaleLabel('ms')
-    .enableOverview(false)
+    .onSegmentClick(segment => {
+      profiler.enableAnimations(true);
+      profiler.zoomX(segment.timeRange);
+    })
+    .onZoom(() => profiler.enableAnimations(true))
     .segmentTooltipContent(d => `<b>${d.label}</b>: ${d.timeRange[1] - d.timeRange[0]}ms (${(d.val / domain[1] * 100).toFixed(2)}%)`)
     .maxLineHeight(24)
-    .rightMargin(150)
-    .data(datum)(ref.current);
+    .rightMargin(150);
+
+  profiler.data(datum)(ref.current);
 }
 
 function App() {
