@@ -2,14 +2,13 @@ import "./App.css";
 import * as d3 from "d3";
 import p from "aggregatejs/percentile";
 import {
-  client,
   useConfig,
   useEditorPanelConfig,
   useElementColumns,
   useElementData,
 } from "@sigmacomputing/plugin";
 import timeline from "timelines-chart";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const SPAN_START = /^(.*)StartTime$/;
 const SPAN_END = /^(.*)EndTime$/;
@@ -55,7 +54,7 @@ function transformMarks(config, data, columnInfo) {
     const entryRaw = JSON.parse(entriesRaw.length === 1 ? entriesRaw[0] : '[]');
     return {
       group: columnInfo?.[entryColId]?.name,
-      data: Object.values(entryRaw.reduce((data, entry) => {
+      data: Object.values(entryRaw?.reduce((data, entry) => {
         let row = data[entry.name];
         if (!row) {
           row = { label: entry.name, data: [] };
@@ -63,7 +62,7 @@ function transformMarks(config, data, columnInfo) {
         }
         row.data.push({ timeRange: entry.timeRange, val: entry.timeRange[1] - entry.timeRange[0] })
         return data;
-      }, {}))
+      }, {}) ?? {})
     };
   }) ?? [];
 
