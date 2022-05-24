@@ -2,24 +2,29 @@ import "./App.css";
 import * as d3 from "d3";
 import p from "aggregatejs/percentile";
 import {
+  client,
   useConfig,
   useEditorPanelConfig,
   useElementColumns,
   useElementData,
 } from "@sigmacomputing/plugin";
 import timeline from "timelines-chart";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 const SPAN_START = /^(.*)StartTime$/;
 const SPAN_END = /^(.*)EndTime$/;
 
-function transform(marks, data, columnInfo, percentile) {
+function transformMarks(config, data, columnInfo) {
+  if (!config.marks?.length) return [[], [0, 1]];
+
+  const { marks, percentile = 0.5 } = config;
   const aggregatedData = {};
+
   for (const colId of marks) {
     const colValues = data[colId];
     if (!colValues) continue;
     aggregatedData[colId] = p(
-      colValues.filter((v) => v == null ? 0 : v),
+      colValues.filter((v) => (v == null ? 0 : v)),
       percentile
     );
   }
@@ -44,19 +49,38 @@ function transform(marks, data, columnInfo, percentile) {
       domain[1] = Math.max(domain[1], aggregatedData[colId]);
     }
   }
+
+  const entryData = config.entries?.map(entryColId => {
+    const entriesRaw = data?.[entryColId] ?? [];
+    const entryRaw = JSON.parse(entriesRaw.length === 1 ? entriesRaw[0] : '[]');
+    return {
+      group: columnInfo?.[entryColId]?.name,
+      data: Object.values(entryRaw.reduce((data, entry) => {
+        let row = data[entry.name];
+        if (!row) {
+          row = { label: entry.name, data: [] };
+          data[entry.name] = row;
+        }
+        row.data.push({ timeRange: entry.timeRange, val: entry.timeRange[1] - entry.timeRange[0] })
+        return data;
+      }, {}))
+    };
+  }) ?? [];
+
   const out = [
     {
-      group: "",
+      group: "marks",
       data: Object.entries(timeSpans).map(([label, timeRange]) => ({
         label,
         data: [
           {
             timeRange,
-            val: timeRange[1] - timeRange[0]
+            val: timeRange[1] - timeRange[0],
           },
         ],
       })),
     },
+    ...entryData,
   ];
   return [out, domain];
 }
@@ -69,14 +93,20 @@ function renderTimeline(datum, ref, domain) {
     .timeFormat("%Q")
     .enableAnimations(false)
     .zQualitative(false)
-    .zColorScale(d3.scalePow().domain(domain).range(['#90c2de', '#08306b']))
-    .zScaleLabel('ms')
-    .onSegmentClick(segment => {
+    .zColorScale(d3.scalePow().domain(domain).range(["#90c2de", "#08306b"]))
+    .zScaleLabel("ms")
+    .onSegmentClick((segment) => {
       profiler.enableAnimations(true);
       profiler.zoomX(segment.timeRange);
     })
     .onZoom(() => profiler.enableAnimations(true))
-    .segmentTooltipContent(d => `<b>${d.label}</b>: ${d.timeRange[1] - d.timeRange[0]}ms (${(d.val / domain[1] * 100).toFixed(2)}%)`)
+    .segmentTooltipContent(
+      (d) =>
+        `<b>${d.label}</b>: ${d.timeRange[1] - d.timeRange[0]}ms (${(
+          (d.val / domain[1]) *
+          100
+        ).toFixed(2)}%)`
+    )
     .maxLineHeight(24)
     .rightMargin(150);
 
@@ -87,6 +117,7 @@ function App() {
   useEditorPanelConfig([
     { name: "source", type: "element" },
     { name: "marks", type: "column", source: "source", allowMultiple: true },
+    { name: "entries", type: "column", source: "source", allowMultiple: true },
     {
       name: "percentile",
       type: "dropdown",
@@ -94,17 +125,15 @@ function App() {
       values: [0.25, 0.5, 0.75, 0.95],
     },
   ]);
-  const marks = useConfig("marks");
-  const source = useConfig("source");
-  const percentile = useConfig("percentile");
-  const columnInfo = useElementColumns(source);
-  const data = useElementData(source);
+  const config = useConfig();
+  const columnInfo = useElementColumns(config.source);
+  const data = useElementData(config.source);
   const ref = useRef();
 
   useEffect(() => {
-    const [transformedData, domain] = transform(marks, data, columnInfo, percentile ?? 0.5);
+    const [transformedData, domain] = transformMarks(config, data, columnInfo);
     renderTimeline(transformedData, ref, domain);
-  }, [columnInfo, data, marks, percentile]);
+  }, [columnInfo, config, data]);
 
   return <div ref={ref} />;
 }
