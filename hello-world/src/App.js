@@ -6,12 +6,12 @@ import { useMemo } from 'react';
 function App() {
   useEditorPanelConfig([
     { type: 'element', name: 'source' },
-    { type: 'column', name: 'measure', allowMultiple: false, allowedTypes: ['number', 'integer'] },
+    { type: 'column', name: 'measure', source: 'source', allowMultiple: false, allowedTypes: ['number', 'integer'] },
   ]);
 
   const config = useConfig()
   const data = useElementData(config.source);
-  const info = useElementColumns(data.source);
+  const info = useElementColumns(config.source);
   const columnData = data[config.measure];
   const columnInfo = info[config.measure];
 
