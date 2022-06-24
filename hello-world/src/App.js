@@ -15,7 +15,7 @@ function App() {
   const columnData = data[config.measure];
   const columnInfo = info[config.measure];
 
-  const sumOfColumn = useMemo(() => columnData.reduce((a, b) => a + b, 0), [columnData]);
+  const sumOfColumn = useMemo(() => columnData?.reduce((a, b) => a + b, 0), [columnData]);
 
   return (
     <div className="App">
