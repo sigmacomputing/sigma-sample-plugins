@@ -1880,17 +1880,17 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@sigmacomputing/plugin-types@^0.6.87":
-  version "0.6.88"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin-types/-/plugin-types-0.6.88.tgz#e364605c4a0b8883f6eff63dc2555302c2807666"
-  integrity sha512-REp0VBx6D1VOvxdEZxZNUXvwd6Fsv8lzs/eoWMkbbE2uqoj9L585Xsz3ImE7wc2y2MgsgaND41k2JoacuwyEJQ==
+"@sigmacomputing/plugin-types@^0.7.62":
+  version "0.7.62"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin-types/-/plugin-types-0.7.62.tgz#94f89b945ddb78d3ffe23df124bb8dc07f9fb5c4"
+  integrity sha512-L2BX8Pk1+cT2EoAIuxIfUP5ODbqnEh4nBWe5JTHai3AyCz2hfxHP5ah5G8oO3IBja66OSleZ8qRw8JwvkN50Pw==
 
-"@sigmacomputing/plugin@^0.6.92":
-  version "0.6.92"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.6.92.tgz#cbfc27af75335faa8127af29bdfa40bf54c503ae"
-  integrity sha512-LZVkGfYLY32U9cMMH24M2mMvjHA5fL+fFfUvBCbpAjmoGhApQQGwAtn2CzZvFwjdoPTBtLC3819YQtMH3KSsvg==
+"@sigmacomputing/plugin@^0.7.53":
+  version "0.7.62"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.7.62.tgz#2710ac5c3fb1e464cca334e7a5805b85983980e0"
+  integrity sha512-dMYzDyJ3/n+pH48yOTKkIsb44LmRamrseKkoQ4St4s7ZYYXiFj1szmPcOVLAjf9soCo/icchVsKlb59UQy4rZQ==
   dependencies:
-    "@sigmacomputing/plugin-types" "^0.6.87"
+    "@sigmacomputing/plugin-types" "^0.7.62"
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
