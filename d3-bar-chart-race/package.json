@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
-    "@observablehq/stdlib": "^3.15.4",
+    "@observablehq/stdlib": "^3.20.0",
     "@sigmacomputing/plugin": "^0.6.71",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
