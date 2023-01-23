@@ -56,11 +56,17 @@ const defaultProps = {
 
     onSpanClicked: () => null,
 }
-class ThundraTraceChart extends Component {
-    // This is to add serviceName as a property of localEndpoint key which is needed for compatibility.
+class WaterfallChart extends Component {
+    // This is to add serviceName as a property of localEndpoint key which is needed for compatibility with zipkin.
     addLocalEndpointFromServiceName = (traceSummary) => {
         return traceSummary.map((trace) => {
-            const { serviceName, errorCode, color, tags, ...rawTrace } = trace
+            let { serviceName, errorCode, color, tags, ...rawTrace } = trace
+            // For compatibility with zipkin library we need an errorCode in
+            // the tags. I don't know why. One guess is that if the errorCode is not zero then
+            // the trace can be highlighted in red to indicate that this trace failed?
+            if (typeof errorCode === "undefined") {
+                errorCode = 0;
+            }
             return {
                 ...rawTrace,
                 localEndpoint: {
@@ -118,7 +124,7 @@ class ThundraTraceChart extends Component {
     }
 }
 
-ThundraTraceChart.propTypes = propTypes
-ThundraTraceChart.defaultProps = defaultProps
+WaterfallChart.propTypes = propTypes
+WaterfallChart.defaultProps = defaultProps
 
-export default ThundraTraceChart
+export default WaterfallChart

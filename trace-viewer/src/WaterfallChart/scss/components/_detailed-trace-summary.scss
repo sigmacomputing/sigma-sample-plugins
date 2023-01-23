@@ -1,5 +1,5 @@
 .detailed-trace-summary {
-
+    color: #000;
 }
 
 .detailed-trace-summary__header {
@@ -28,15 +28,15 @@
 }
 
 .detailed-trace-summary__data-label {
-  color: $dark-2;
-  &:after {
+  color: var(--dark-2);
+}
+.detailed-trace-summary__data-label:after {
     content: ':';
     margin-right: 3px;
-  }
 }
 
 .detailed-trace-summary__data-value {
-  color: $gray-3;
+  color: var(--gray-3);
 }
 
 .detailed-trace-summary__mini-trace-viewer-wrapper {

@@ -132,7 +132,7 @@ function formatDate(timestamp, utc) {
 
 export function mkDurationStr(duration) {
     if (duration === 0 || typeof duration === 'undefined') {
-        return ''
+        return '0ms'
     }
     if (duration < 1000) {
         // return `${duration.toFixed(0)}μs`;

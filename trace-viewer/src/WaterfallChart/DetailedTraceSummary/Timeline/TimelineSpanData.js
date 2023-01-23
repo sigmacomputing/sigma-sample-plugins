@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { prettyPrintJson } from 'pretty-print-json';
 
 import ServiceNameBadge from './ServiceNameBadge';
 import { getServiceNameColor, getColorFromSpan } from '../util/color';
@@ -28,7 +29,7 @@ const parseTagsData = (tags) => {
 
 // Render span details info
 const renderInfo = (span, showSpanDetailTitle, spanDetail) => {
-    // console.log("TSD; span: ", span, spanDetail);
+    //console.log("TSD; span: ", span, spanDetail);
 
     return (
         <div className="timeline-span-data__content">
@@ -42,6 +43,15 @@ const renderInfo = (span, showSpanDetailTitle, spanDetail) => {
                     {`${span.serviceName}: ${span.spanName}`}
                 </div>
             }            
+            <h2>
+                Start Timestamp: {span.timestamp / 1000}
+            </h2>
+            <pre className="TagsCodeBlock" dangerouslySetInnerHTML={{__html: prettyPrintJson.toHtml({
+                ...span.tagsObj,
+                ["errorCode"]: undefined,
+                ["ttc_color"]: undefined,
+            })}}>
+            </pre>
 
             {spanDetail}
 

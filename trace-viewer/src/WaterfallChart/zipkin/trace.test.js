@@ -265,12 +265,12 @@ describe('traceSummariesToMustache', () => {
 });
 
 describe('mkDurationStr', () => {
-  it('should return empty string on zero duration', () => {
-    expect(mkDurationStr(0)).toBe('');
+  it('should return 0ms string on zero duration', () => {
+    expect(mkDurationStr(0)).toBe('0ms');
   });
 
-  it('should return empty string on undefined duration', () => {
-    expect(mkDurationStr()).toBe('');
+  it('should return 0ms string on undefined duration', () => {
+    expect(mkDurationStr()).toBe('0ms');
   });
 
   it('should format microseconds', () => {

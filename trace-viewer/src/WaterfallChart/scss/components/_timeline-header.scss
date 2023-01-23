@@ -6,13 +6,14 @@
   overflow: hidden;
   border-bottom: solid 1px $gray-4;
   display: flex;
+  color: $header-color;
 }
 
 .timeline-header__resizable-column {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-right: 1px solid $gray-8;
+  border-right: 1px solid $white;
   box-sizing: border-box;
 }
 
