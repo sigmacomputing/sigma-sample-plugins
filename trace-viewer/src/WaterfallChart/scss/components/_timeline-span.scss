@@ -1,13 +1,13 @@
 .timeline-span {
     width: 100%;
-    height: 25px;
+    height: 30px;
     position: relative;
     display: flex;
     cursor: pointer;
     background: $white;
 
     &:hover {
-        background: $gray-8;
+        background: $cyan-light-2;
     }
 }
 
@@ -34,11 +34,12 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .timeline-span__span-name-column {
-    color: $gray-4;
-    font-size: 12px;
+    color: $gray-8;
+    font-size: $font-size-md;
     padding-left: 4px;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -76,9 +77,11 @@
 
 .timeline-span__duration {
     color: $gray-9;
-    font-size: 12px;
+    font-size: $font-size-md;
     position: absolute;
     z-index: 99;
+    color: #000;
+    text-shadow: -1px -1px 2px #fff, -1px 1px 2px #fff, 1px 1px 2px #fff, 1px -1px 2px #fff;
 
     &--left {
         padding-left: 8px;
@@ -124,7 +127,7 @@
 }
 
 .timeline-span__service-name {
-    font-size: 12px;
+    font-size: $font-size-md;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;

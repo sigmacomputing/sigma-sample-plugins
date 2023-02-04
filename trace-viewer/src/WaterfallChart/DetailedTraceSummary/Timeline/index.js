@@ -28,6 +28,8 @@ class Timeline extends React.Component {
             dataOpenedSpans: {},
             selectedSpanId: null,
         }
+
+
         this.handleServiceNameColumnWidthChange =
             this.handleServiceNameColumnWidthChange.bind(this)
         this.handleSpanNameColumnWidthChange =
@@ -37,14 +39,15 @@ class Timeline extends React.Component {
 
         // console.log("Timeline, constructor; props: ", this.props);
         const { spans } = this.props.traceSummary
-        this.spanRefs = {}
+        console.log("found spans", spans);
+        this.spanRefs = new Map();
         spans.map((span) => {
             this.spanRefs[span.spanId] = React.createRef()
         })
     }
 
     componentDidMount() {
-        // Close all spans at fist
+        // Open all spans at fist
         const spanIds = {}
         this.props.traceSummary.spans.forEach((span) => {
             spanIds[span.spanId] = true
@@ -72,28 +75,6 @@ class Timeline extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        // console.log("CWRP, Timeline; props, nextProps: ", this.props, nextProps);
-
-        // This is to update selected spans if highlighted spans array is changed.
-        if (
-            nextProps.spanHighlights.length > 0 &&
-            JSON.stringify(nextProps.spanHighlights) !==
-                JSON.stringify(this.props.spanHighlights)
-        ) {
-            this.handleDataOpenToggle(nextProps.spanHighlights[0])
-        }
-
-        // This is to update initial active spans if array is updated.
-        if (
-            nextProps.spanHighlights.length === 0 &&
-            JSON.stringify(nextProps.activeSpanIds) !==
-                JSON.stringify(this.props.activeSpanIds)
-        ) {
-            this.setDataOpenedSpans(nextProps.activeSpanIds)
-        }
-    }
-
     // This is to scroll to the first active span when the DOM is ready after state updates.
     // Scroll is triggered with updates to the state of dataOpenedSpans' states.
     // If activeSpanIds array is updated auto scoll happens but if user clicks spans manually to open details,
@@ -106,7 +87,27 @@ class Timeline extends React.Component {
             //dataOpenedSpans will become same after same spans selected again
         ) {
             // console.log("CDU, scroll");
-            this.scrollToOpenedSpanDetail(this.props.activeSpanIds[0])
+            if (this.props.activeSpanIds.length > 0) {
+                this.scrollToOpenedSpanDetail(this.props.activeSpanIds[0])
+            }
+        }
+
+        // This is to update selected spans if highlighted spans array is changed.
+        if (
+            this.props.spanHighlights.length > 0 &&
+            JSON.stringify(this.props.spanHighlights) !==
+                JSON.stringify(prevProps.spanHighlights)
+        ) {
+            this.handleDataOpenToggle(this.props.spanHighlights[0])
+        }
+
+        // This is to update initial active spans if array is updated.
+        if (
+            this.props.spanHighlights.length === 0 &&
+            JSON.stringify(this.props.activeSpanIds) !==
+                JSON.stringify(prevProps.activeSpanIds)
+        ) {
+            this.setDataOpenedSpans(this.props.activeSpanIds)
         }
 
         // If dataOpenedSpans and activeSpanIds arrays are same, then apply auto scroll to first active span.
@@ -118,8 +119,11 @@ class Timeline extends React.Component {
             // console.log("SCROLL to first item on INIT; dataOpenedSpansKeysArray, state, props: ", dataOpenedSpansKeysArray, this.state, this.props);
             // Wee need to give some time after render finished to scroll properly.
             setTimeout(
-                () =>
-                    this.scrollToOpenedSpanDetail(this.props.activeSpanIds[0]),
+                () => {
+                    if (this.props.activeSpanIds.length > 0) {
+                        this.scrollToOpenedSpanDetail(this.props.activeSpanIds[0]);
+                    }
+                },
                 1000
             )
         }
@@ -142,13 +146,15 @@ class Timeline extends React.Component {
     }
 
     scrollToOpenedSpanDetail = (spanId) => {
-        // console.log("scrollToOpenedSpanDetail; spanId, spanRefs: ", spanId, this.spanRefs);
-        const firstSpanElement = this.spanRefs[spanId].current
-        firstSpanElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'nearest',
-        })
+        console.log("scrollToOpenedSpanDetail; spanId, spanRefs: ", spanId, this.spanRefs);
+        if (this.spanRefs.has(spanId)) {
+            const firstSpanElement = this.spanRefs[spanId].current
+            firstSpanElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+                inline: 'nearest',
+            })
+        }
     }
 
     handleServiceNameColumnWidthChange(serviceNameColumnWidth) {
@@ -286,6 +292,10 @@ class Timeline extends React.Component {
                             this.props.serviceNameColumnTitle
                         }
                         spanInfoColumnTitle={this.props.spanInfoColumnTitle}
+                        showSpanDetailTitle={
+                            this.props.showSpanDetailTitle
+                        }
+                        
                     />
                 )}
 
@@ -306,13 +316,12 @@ class Timeline extends React.Component {
                         return null
                     }
                     this.calculateChildsSpanMeasures(span)
+                    if (!traceSummary.duration) {
+                        console.warn(traceSummary.duration)
+                    }
 
                     return (
-                        <div
-                            className="timeline-span-ref-wrapper"
-                            key={span.spanId}
-                            ref={this.spanRefs[span.spanId]}
-                        >
+                        <div key={span.spanId} ref={ this.spanRefs[span.spanId] }>
                             <TimelineSpan
                                 showDuration={showDuration}
                                 errorCode={span.errorCode}
@@ -347,7 +356,7 @@ class Timeline extends React.Component {
                                 spanCriticalPathColor={spanCriticalPathColor}
                             />
                         </div>
-                    )
+                    );
                 })}
             </div>
         )

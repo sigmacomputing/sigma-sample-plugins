@@ -280,7 +280,10 @@ class TimelineSpan extends React.Component {
             spanBackgroundColor,
             spanCriticalPathColor,
             showDuration = true,
+            span,
         } = this.props
+
+        const barColor = getColorFromSpan(span, false);
 
         return (
             <div className="timeline-span__bar-container">
@@ -292,7 +295,7 @@ class TimelineSpan extends React.Component {
                                 style={{
                                     left: `${left}%`,
                                     width: `${width}%`,
-                                    background: spanBackgroundColor,
+                                    background: barColor,
                                 }}
                             />
                             <span
@@ -325,7 +328,6 @@ class TimelineSpan extends React.Component {
     }
 
     render() {
-        // console.log("TimelineSpan; props: ", this.props);
 
         const {
             span,
@@ -357,11 +359,12 @@ class TimelineSpan extends React.Component {
         }
 
         return (
-            <div>
+            <React.Fragment key={this.props.key}>
                 <div
                     role="presentation"
                     className={timelineSpanClass}
                     onClick={this.handleDataOpenToggle}
+                    ref={this.props.myref}
                 >
                     <div
                         className="timeline-span__service-name-column-wrapper"
@@ -405,7 +408,7 @@ class TimelineSpan extends React.Component {
                         spanDetail={this.props.spanDetail}
                     />
                 ) : null}
-            </div>
+            </React.Fragment>
         )
     }
 }

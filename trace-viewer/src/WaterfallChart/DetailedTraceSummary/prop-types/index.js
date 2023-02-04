@@ -5,7 +5,8 @@ export const spanTagPropTypes = PropTypes.shape({
   // value: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.boolean
+    PropTypes.boolean,
+    //PropTypes.object,
   ]).isRequired,
 });
 
