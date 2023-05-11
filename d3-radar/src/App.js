@@ -8,7 +8,6 @@ import {
 } from "@sigmacomputing/plugin";
 import { useMemo, useRef } from "react";
 import { sum } from "lodash";
-import { format, fromUnixTime } from "date-fns";
 import Radar from 'react-d3-radar';
 
 client.config.configureEditorPanel([
@@ -17,128 +16,142 @@ client.config.configureEditorPanel([
 		type: "element" 
 	},
 	{ 
-		name: "categories", 
+		name: "sets", 
 		type: "column", 
 		source: "source", 
 		allowMultiple: false, 
 		allowedTypes: ['text'] 
 	},
 	{ 
-		name: "spokes", 
+		name: "variables", 
 		type: "column", 
 		source: "source", 
 		allowMultiple: true, 
 		allowedTypes: ['number', 'integer'] 
 	},
-	{ 
-		name: "source2", 
-		type: "element" 
-	},
 	{
-		name: 'column input 1',
-		type: 'column',
-		source: "source2",
-		allowMultiple: true
-	},
-	{ 
-		name: 'group input 2', 
-		type: 'group' 
-	},
-	{
-		name: 'text input 3',
-		source: 'group input 2',
+		name: 'number',
+		source: "source", 
 		type: 'text'
 	},
-	{
-		name: 'text input 4',
-		source: 'group input 2',
-		type: 'text'
-	},
-	{
-		name: 'secure input 5',
-		type: 'text',
-		secure: true
-	},
-	{
-		name: 'checkbox input 6',
-		type: 'checkbox'
-	},
-	{
-		name: 'toggle input 7',
-		type: 'toggle'
-	},
+	// { 
+	// 	name: "source2", 
+	// 	type: "element" 
+	// },
+	// {
+	// 	name: 'column input 1',
+	// 	type: 'column',
+	// 	source: "source2",
+	// 	allowMultiple: true
+	// },
+	// { 
+	// 	name: 'group input 2', 
+	// 	type: 'group' 
+	// },
+	// {
+	// 	name: 'text input 3',
+	// 	source: 'group input 2',
+	// 	type: 'text'
+	// },
+	// {
+	// 	name: 'text input 4',
+	// 	source: 'group input 2',
+	// 	type: 'text'
+	// },
+	// {
+	// 	name: 'secure input 5',
+	// 	type: 'text',
+	// 	secure: true
+	// },
+	// {
+	// 	name: 'checkbox input 6',
+	// 	type: 'checkbox'
+	// },
+	// {
+	// 	name: 'toggle input 7',
+	// 	type: 'toggle'
+	// },
 ]);
 
-function formatColName(value, colInfo) {
-	if (colInfo?.format) {
-		return format(fromUnixTime(value / 1000), 'yyyy-MM')
-	} else {
-		return value;
-	}
-}
+function chunk(data, colInfo, sets, variables, numGroups) {
+	if (sets) {
+		// let valuesObj = {};
+		// for(let i = 0; i < variables.length; i++) {
+		// 	valuesObj[variables[i]] = Math.random() * 10;
+		// }
 
-function chunk(data, colInfo, dimension, measures) {
-	if (dimension.length) {
-		const buckets = {};
-		const dimColId = dimension[0];
-		const dimCol = data[dimColId] ?? [];
-		const columns = Object.keys(data);
-		for (let i = 0; i < dimCol.length; i++) {
-			buckets[dimCol[i]] = buckets[dimCol[i]] ?? columns.reduce((acc, col) => ({ ...acc, [col]: [] }), {});
-			columns.forEach(k => {
-				buckets[dimCol[i]][k].push(data[k][i]);
-			})
+		const setCol = data[sets] ?? [];
+		const uniqueSets = setCol.filter(onlyUnique).slice(0, numGroups);
+		const setList = uniqueSets.map((name) => {
+			let valuesObj = {};
+			for(let i = 0; i < variables.length; i++) {
+				valuesObj[variables[i]] = 0;
+			}
+			return (
+				{
+					key: name,
+					label: name,
+					values: {
+						...valuesObj
+					},
+				}
+			);
+		})
+		// console.log(variables); // list of spoke variable col names
+		const variableObjList = variables.map((variableName) => {
+			return {
+				key: variableName,
+				label: colInfo[variableName]?.name,
+			}
+		})
+
+		for(let j = 0; j < setCol.length; j++){
+			let thisSet = setCol[j];
+			if (uniqueSets.includes(thisSet)) {
+				for(let setIdx = 0; setIdx < uniqueSets.length; setIdx++){
+					if(setList[setIdx].key === thisSet) {
+						for(let varIdx = 0; varIdx < variables.length; varIdx++){
+							setList[setIdx].values[variables[varIdx]] += data[variables[varIdx]][j];
+						}
+					}
+				}
+			}
 		}
-		return Object.entries(buckets).map(([bucketName, bucketData]) => ({
-			name: formatColName(bucketName, colInfo[dimColId]),
-			children: chunk(bucketData, colInfo, dimension.slice(1), measures)
-		}))
+
+		return {
+			variables: variableObjList,
+			sets: setList,
+		}
 	} else {
-		return measures.map(m => ({
+		return variables.map(m => ({
 			name: colInfo[m]?.name,
 			value: sum(data[m])
 		}))
 	}
 }
 
+function onlyUnique(value, index, array) {
+	return array.indexOf(value) === index;
+  }
+
 function App() {
-	const config = useConfig();
-	const columns = useElementColumns(config.source); // all cols
-	const sigmaData = useElementData(config.source);
-	console.log(sigmaData);
+	// useConfig, useElementColumns, useElementData is a function of the Sigma API
+	const config = useConfig(); // all the info of the selections in the LHS panel
+	const columns = useElementColumns(config.source); // name of all cols in "source"
+	const sigmaData = useElementData(config.source); // data in the table
+	const numGroups = config.number || 5;
+
 	const data = useMemo(() => {
-		const categories = config.categories ?? [];
-		const spokes = config.spokes ?? [];
+		const sets = config.sets ?? [];
+		const variables = config.variables ?? [];
 
 		return {
 			name: "data",
-			children: chunk(sigmaData, columns, categories, spokes),
+			children: chunk(sigmaData, columns, sets, variables, numGroups),
 		};
-	}, [columns, config.categories, config.spokes, sigmaData]);
-
-	const variableList = [];
-	// { key: 'resilience', label: 'Resilience' },
-
-	const setList = [];
-	/*
-	{
-		key: 'me',
-		label: 'My Scores',
-		values: {
-			resilience: 4,
-			strength: 6,
-			adaptability: 7,
-			creativity: 2,
-			openness: 8,
-			confidence: 1,
-		},
-	},
-	*/
-	const realData = null;
-	// const realData = {
-	// 	variables: variableList,
-	// 	sets: setList,
-	// };
+	}, [columns, config.sets, config.variables, sigmaData, numGroups]);
+	
+	const realData = data.children;
 
 	const backupData = {
 		variables: [
@@ -174,10 +187,22 @@ function App() {
 					confidence: 3,
 				},
 			},
+			{
+				key: 'everyone2',
+				label: 'Everyone2',
+				values: {
+					resilience: 1,
+					strength: 6,
+					adaptability: 3,
+					creativity: 1,
+					openness: 6,
+					confidence: 9,
+				},
+			},
 		],
 	};
 
-	const axisMax = 10;
+	const axisMax = .001;
 	return <Radar
 		width={500}
 		height={500}
