@@ -74,7 +74,7 @@ client.config.configureEditorPanel([
 ]);
 
 function chunk(data, colInfo, sets, variables, numGroups) {
-	if (sets) {
+	if (sets && variables && data && colInfo) {
 		// let valuesObj = {};
 		// for(let i = 0; i < variables.length; i++) {
 		// 	valuesObj[variables[i]] = Math.random() * 10;
@@ -123,10 +123,56 @@ function chunk(data, colInfo, sets, variables, numGroups) {
 			sets: setList,
 		}
 	} else {
-		return variables.map(m => ({
-			name: colInfo[m]?.name,
-			value: sum(data[m])
-		}))
+		return (
+			{
+				variables: [
+					{ key: 'resilience', label: 'Resilience' },
+					{ key: 'strength', label: 'Strength' },
+					{ key: 'adaptability', label: 'Adaptability' },
+					{ key: 'creativity', label: 'Creativity' },
+					{ key: 'openness', label: 'Open to Change' },
+					{ key: 'confidence', label: 'Confidence' },
+				],
+				sets: [
+					{
+						key: 'me',
+						label: 'My Scores',
+						values: {
+							resilience: 4,
+							strength: 6,
+							adaptability: 7,
+							creativity: 2,
+							openness: 8,
+							confidence: 1,
+						},
+					},
+					{
+						key: 'everyone',
+						label: 'Everyone',
+						values: {
+							resilience: 10,
+							strength: 8,
+							adaptability: 6,
+							creativity: 4,
+							openness: 2,
+							confidence: 3,
+						},
+					},
+					{
+						key: 'everyone2',
+						label: 'Everyone2',
+						values: {
+							resilience: 1,
+							strength: 6,
+							adaptability: 3,
+							creativity: 1,
+							openness: 6,
+							confidence: 9,
+						},
+					},
+				],
+			}
+		);
 	}
 }
 
@@ -153,55 +199,6 @@ function App() {
 	
 	const realData = data.children;
 
-	const backupData = {
-		variables: [
-			{ key: 'resilience', label: 'Resilience' },
-			{ key: 'strength', label: 'Strength' },
-			{ key: 'adaptability', label: 'Adaptability' },
-			{ key: 'creativity', label: 'Creativity' },
-			{ key: 'openness', label: 'Open to Change' },
-			{ key: 'confidence', label: 'Confidence' },
-		],
-		sets: [
-			{
-				key: 'me',
-				label: 'My Scores',
-				values: {
-					resilience: 4,
-					strength: 6,
-					adaptability: 7,
-					creativity: 2,
-					openness: 8,
-					confidence: 1,
-				},
-			},
-			{
-				key: 'everyone',
-				label: 'Everyone',
-				values: {
-					resilience: 10,
-					strength: 8,
-					adaptability: 6,
-					creativity: 4,
-					openness: 2,
-					confidence: 3,
-				},
-			},
-			{
-				key: 'everyone2',
-				label: 'Everyone2',
-				values: {
-					resilience: 1,
-					strength: 6,
-					adaptability: 3,
-					creativity: 1,
-					openness: 6,
-					confidence: 9,
-				},
-			},
-		],
-	};
-
 	const axisMax = .001;
 	return <Radar
 		width={500}
@@ -216,7 +213,7 @@ function App() {
 				console.log('lol butts');
 			}
 		}}
-		data={realData || backupData}
+		data={realData}
 	/>
 }
 
