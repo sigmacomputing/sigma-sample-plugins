@@ -13,7 +13,7 @@
     "@sigmacomputing/plugin": "^1.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-simple-tree-menu": "^1.1.18"
+    "react-dropdown-tree-select": "^2.8.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",

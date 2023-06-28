@@ -424,6 +424,11 @@ array-union@^2.1.0:
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-2.1.0.tgz#b798420adbeb1de828d84acd8a2e23d3efe85e8d"
   integrity sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==
 
+array.partial@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/array.partial/-/array.partial-1.0.5.tgz#f514595aacbf6a99ea20bbcffbcacc10316f0d56"
+  integrity sha512-nkHH1dU6JXrwppCqdUD5M1R85vihgBqhk9miq+3WFwwRayNY1ggpOT6l99PppqYQ1Hcjv2amFfUzhe25eAcYfA==
+
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
@@ -456,11 +461,6 @@ chalk@^4.0.0:
   dependencies:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
-
-classnames@^2.2.6:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
-  integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
 
 color-convert@^2.0.1:
   version "2.0.1"
@@ -692,11 +692,6 @@ fast-levenshtein@^2.0.6:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
 
-fast-memoize@^2.5.1:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/fast-memoize/-/fast-memoize-2.5.2.tgz#79e3bb6a4ec867ea40ba0e7146816f6cdce9b57e"
-  integrity sha512-Ue0LwpDYErFbmNnZSF0UH6eImUwDmogUO1jyE+JbN2gsQz/jICm1Ve7t9QT0rNSsfJt+Hs4/S3GnsDVjL4HVrw==
-
 fastq@^1.6.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.15.0.tgz#d04d07c6a2a68fe4599fea8d2e103a937fae6b3a"
@@ -839,11 +834,6 @@ inherits@2:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
-
-is-empty@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/is-empty/-/is-empty-1.2.0.tgz#de9bb5b278738a05a0b09a57e1fb4d4a341a9f6b"
-  integrity sha512-F2FnH/otLNJv0J6wc73A5Xo7oHLNnqplYqZhUu01tD54DIPvxIRSTSLkrUB/M0nHO4vo1O9PDfN4KoTxCzLh/w==
 
 is-extglob@^2.1.1:
   version "2.1.1"
@@ -1070,15 +1060,18 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-react-simple-tree-menu@^1.1.18:
-  version "1.1.18"
-  resolved "https://registry.yarnpkg.com/react-simple-tree-menu/-/react-simple-tree-menu-1.1.18.tgz#4c35f6c2348da8deac5cd10ab5dd07a5213f74f2"
-  integrity sha512-sW33U4TF6J3CuhDXs40r8KXCZsyd9JKLVHRwCx0hxaWaXFD0p7LeeK1gJB+GLNErSGs1F1847E/kkTIyKi9E0w==
+react-dropdown-tree-select@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/react-dropdown-tree-select/-/react-dropdown-tree-select-2.8.0.tgz#aaafc46a4df046fece13df90ca4224aaeb6a335d"
+  integrity sha512-Nu8Aur/qgNgJgxeW10dkyKHGBzyhyjIZBngmuM6gW1oNBs3UE9IcYUlUz2c6rLBEcAQYtkkp4pvu749mXKE0Dw==
   dependencies:
-    classnames "^2.2.6"
-    fast-memoize "^2.5.1"
-    is-empty "^1.2.0"
-    tiny-debounce "^0.1.1"
+    array.partial "^1.0.5"
+    react-infinite-scroll-component "^4.0.2"
+
+react-infinite-scroll-component@^4.0.2:
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-4.5.3.tgz#008c2ec358628b490117ffc4aa6ce6982b26f8be"
+  integrity sha512-8O0PIeYZx0xFVS1ChLlLl/1obn64vylzXeheLsm+t0qUibmet7U6kDaKFg6jVRQJwDikWBTcyqEFFsxrbFCO5w==
 
 react@^18.2.0:
   version "18.2.0"
@@ -1177,11 +1170,6 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
-
-tiny-debounce@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/tiny-debounce/-/tiny-debounce-0.1.1.tgz#e7759447ca1d48830d3b302ce94666a0ca537b1d"
-  integrity sha512-kr27PvRJg+hryym7fIbXFPRhOFzyyRFaxBRnQcLXCCkqjbZoKwdCba6DYfPwYdje2Be9hHhFUDJOSAsFwf1b+g==
 
 to-regex-range@^5.0.1:
   version "5.0.1"
