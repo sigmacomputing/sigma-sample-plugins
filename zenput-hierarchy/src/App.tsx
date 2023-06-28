@@ -54,7 +54,7 @@ function App() {
       if (!stack[currentDepth - 1].children) {
         stack[currentDepth - 1].children = [];
       }
-      stack[currentDepth - 1].children.push(node);
+      stack[currentDepth - 1].children?.push(node);
     }
     return data;
   }, [config.depth, config.label, config.x, sigmaData]);
