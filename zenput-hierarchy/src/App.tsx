@@ -65,8 +65,8 @@ function App() {
       // @ts-expect-error lib definitions need updates
       checked={filterValue?.defaultValue.value}
       expanded={expanded}
+      checkModel="all"
       expandOnClick
-      noCascade
       onExpand={nodes => setExpanded(nodes)}
       onCheck={(selectedNodes) => {
         console.log(selectedNodes);
