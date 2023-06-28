@@ -25,7 +25,8 @@ function App() {
   const config = useConfig();
   const sigmaData = useElementData(config.source);
   const [filterValue, setFilter] = useVariable(config.filterControl);
-  const [expanded, setExpanded] = useState([]);
+  // @ts-expect-error lib definitions need updates
+  const [expanded, setExpanded] = useState(filterValue?.defaultValue.value);
 
   const treeData = useMemo(() => {
     if (
@@ -36,7 +37,7 @@ function App() {
       return [];
     }
     const rootNode: Node_t = {
-      value: sigmaData[config.x][0],
+      value: sigmaData[config.label][0],
       label: sigmaData[config.label][0],
       children: [],
     };
@@ -63,7 +64,8 @@ function App() {
       // @ts-expect-error lib definitions need updates
       checked={filterValue?.defaultValue.value}
       expanded={expanded}
-      // @ts-expect-error not sure 
+      expandOnClick
+      noCascade
       onExpand={nodes => setExpanded(nodes)}
       onCheck={(selectedNodes) => {
         console.log(selectedNodes);
@@ -72,8 +74,8 @@ function App() {
         } else {
           setFilter(null);
         }
-      }
-      }
+      }}
+      iconsClass="fa4"
     />
   );
 }
