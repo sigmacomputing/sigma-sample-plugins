@@ -1,13 +1,11 @@
-import "./App.css";
 import {
   useConfig,
   useEditorPanelConfig,
   useElementData,
   useVariable,
 } from "@sigmacomputing/plugin";
-import { useMemo } from "react";
-import DropdownTreeSelect from "react-dropdown-tree-select";
-import "react-dropdown-tree-select/dist/styles.css";
+import { useMemo, useState } from "react";
+import CheckboxTree from "react-checkbox-tree";
 
 interface Node_t {
   value: string;
@@ -27,6 +25,7 @@ function App() {
   const config = useConfig();
   const sigmaData = useElementData(config.source);
   const [filterValue, setFilter] = useVariable(config.filterControl);
+  const [expanded, setExpanded] = useState([]);
 
   const treeData = useMemo(() => {
     if (
@@ -40,7 +39,6 @@ function App() {
       value: sigmaData[config.x][0],
       label: sigmaData[config.label][0],
       children: [],
-      isDefaultValue: filterValue?.defaultValue.value.includes(sigmaData[config.label][0]),
     };
     const data = [rootNode];
     const stack = [rootNode];
@@ -48,27 +46,29 @@ function App() {
     // assuming that x is always sorted by ascending order
     for (let i = 1; i < sigmaData[config.label].length; i++) {
       const node = {
-        value: sigmaData[config.x][i],
+        value: sigmaData[config.label][i],
         label: sigmaData[config.label][i],
         children: [],
-        isDefaultValue: filterValue?.defaultValue.value.includes(sigmaData[config.label][i]),
       };
       const currentDepth = sigmaData[config.depth][i];
       stack[currentDepth] = node;
       stack[currentDepth - 1].children.push(node);
     }
     return data;
-  }, [config.depth, config.label, config.x, filterValue?.defaultValue.value, sigmaData]);
+  }, [config.depth, config.label, config.x, sigmaData]);
 
   return (
-    <DropdownTreeSelect
-      data={treeData}
-      mode="hierarchical"
-      keepOpenOnSelect
-      onChange={(_, selectedNodes) => {
+    <CheckboxTree
+      nodes={treeData}
+      // @ts-expect-error lib definitions need updates
+      checked={filterValue?.defaultValue.value}
+      expanded={expanded}
+      // @ts-expect-error not sure 
+      onExpand={nodes => setExpanded(nodes)}
+      onCheck={(selectedNodes) => {
         console.log(selectedNodes);
         if (selectedNodes.length) {
-          setFilter(selectedNodes.map((node) => node.label).join(","))
+          setFilter(selectedNodes.join(","))
         } else {
           setFilter(null);
         }
