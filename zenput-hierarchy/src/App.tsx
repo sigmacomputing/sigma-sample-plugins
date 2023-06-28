@@ -10,7 +10,7 @@ import CheckboxTree from "react-checkbox-tree";
 interface Node_t {
   value: string;
   label: string;
-  children: Node_t[];
+  children?: Node_t[];
 }
 
 function App() {
@@ -39,7 +39,6 @@ function App() {
     const rootNode: Node_t = {
       value: sigmaData[config.label][0],
       label: sigmaData[config.label][0],
-      children: [],
     };
     const data = [rootNode];
     const stack = [rootNode];
@@ -49,10 +48,12 @@ function App() {
       const node = {
         value: sigmaData[config.label][i],
         label: sigmaData[config.label][i],
-        children: [],
       };
       const currentDepth = sigmaData[config.depth][i];
       stack[currentDepth] = node;
+      if (!stack[currentDepth - 1].children) {
+        stack[currentDepth - 1].children = [];
+      }
       stack[currentDepth - 1].children.push(node);
     }
     return data;
