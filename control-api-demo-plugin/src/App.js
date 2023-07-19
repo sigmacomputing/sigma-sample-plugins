@@ -1,5 +1,5 @@
 import './App.css';
-import { client, useVariable } from '@sigmacomputing/plugin';
+import { client, useConfig, useVariable } from '@sigmacomputing/plugin';
 import * as React from 'react';
 
 client.config.configureEditorPanel([
@@ -10,6 +10,8 @@ client.config.configureEditorPanel([
 ]);
 
 function App() {
+  const config = useConfig();
+
   const [, setQuarter] = useVariable(config.quarter);
   const [, setSearchSKU] = useVariable(config.searchSKUNumber);
   const [, setOrderNumber] = useVariable(config.orderNumber);
