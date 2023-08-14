@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.7.1",
+    "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.6.0",
     "@observablehq/stdlib": "^3.15.4",
     "@sigmacomputing/plugin": "^0.6.71",
