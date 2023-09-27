@@ -28,12 +28,8 @@ function graph(data) {
   new OrgChart()
       .container('.container')
       .data(data)
-      .nodeHeight(d => 70)
-      .nodeWidth(d => {
-        if (d.depth === 0) return 250;
-        if (d.depth === 1) return 220;
-        return 140;
-      })
+      .nodeHeight((d) => 85 + 25)
+      .nodeWidth((d) => 220 + 2)
       .childrenMargin(d => 50)
       .compactMarginBetween(d => 35)
       .compactMarginPair(d => 30)
@@ -45,40 +41,38 @@ function graph(data) {
                 : `<i class="fas fa-chevron-down"></i>`
         }</span> ${node.data._directSubordinates}  </div>`;
       })
-      .nodeContent(function(d, i, arr, state) {
-        const colors = ['#278B8D', '#404040', '#0C5C73', '#33C6CB'];
-        const color = colors[d.depth % colors.length];
+      .nodeContent(function (d, i, arr, state) {
+        const color = '#FFFFFF';
+        const imageDiffVert = 25 + 2;
         return `
-            <div style="background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:50px">
-               <img src=" ${
-            d.data.imageUrl
-        }" style="position:absolute;margin-top:5px;margin-left:${5}px;border-radius:100px;width:60px;height:60px;text-align: left;" />
-               <div style="position:absolute;top:-15px;width:${
-            d.width
-        }px;text-align:center;color:#fafafa;">
-                     <!--<div style="margin:0 auto;background-color:${color};display:inline-block;padding:8px;padding-bottom:0px;border-radius:5px"> ${d.data.id}</div>-->
-              </div>
+                <div className="parent" style='width:${d.width}px;height:${d.height}px;padding-top:${imageDiffVert - 2}px;padding-left:1px;padding-right:1px;'>
 
-              <div style="color:#fafafa;font-size:${
-            d.depth < 2 ? 16 : 12
-        }px;font-weight:bold;margin-left:70px;margin-top:15px"> ${d.depth < 2 ? d.data.name : (d.data.name || '').trim().split(/\s+/g)[0]} </div>
-              <div style="color:#fafafa;margin-left:70px;margin-top:5px"> ${
-            d.depth < 2 ? d.data.positionName : d.data.area
-        } </div>
-              
-               <!--
-               <div style="padding:20px; padding-top:35px;text-align:center">
-                  
-                   
-               </div> 
-              
-               <div style="display:flex;justify-content:space-between;padding-left:15px;padding-right:15px;">
-                 <div > Manages:  ${d.data._directSubordinates} 👤</div>  
-                 <div > Oversees: ${d.data._totalSubordinates} 👤</div>    
-               </div>
-               -->
-           </div>
-  `;
+                        <div className="person-component" style="font-family: 'Inter', sans-serif;background-color:${color};  margin-left:-1px;width:${d.width - 2}px;height:${d.height - imageDiffVert}px;border-radius:10px;border: 1px solid #E4E2E9; display:flex; justify-content:center; align-items:center; flex-direction:column; position: relative">
+                                          
+                      
+
+                            <img src=" ${d.data.imageUrl}" style="margin-left:${-139}px;border-radius:500px;width:50px;height:50px; position: fixed; top: -10px;" />
+                            
+                            <div className="name parent" style="position: fixed; top: 35px;">
+                              <div className="person name" style="font-size:15px;color:#08011E;margin-left:-100px;margin-top:5px; position: fixed;">  ${d.data.name} </div>
+                            </div>
+                            
+                            <div className="title parent" style="position: fixed; width: 200px;">
+                              <div className="person title" style="color:#4346FF;font-size:10px; font-weight: bold; width: fit-content; left: 12px; position: fixed; top: 62px;"> ${d.data.positionName} </div>
+                            </div>
+
+                            <div className="area parent" style="position: fixed; width: 200px;">
+                              <div className="person area" style="color:#716E7B;font-size:10px; width: fit-content; position: fixed; top: 80px; left: 12px;"> ${d.data.area} </div>
+                            </div>
+
+                            <div className="location parent" style="position: fixed; width: 200px; height: 70px;">
+                              <div className="person location" style="color:#716E7B;font-size:10px; width: fit-content; position: absolute; right: 0px;"> ${d.data.location} </div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                            `;
       })
       .render();
 }
