@@ -4,7 +4,7 @@ import { ChakraProvider, Button, Box } from '@chakra-ui/react';
 
 // ---- Sigma Config -----
 client.config.configureEditorPanel([
-  { name: "Hightouch API Token", type: "text"},
+  { name: "Hightouch API Token", type: "text", secure: true },
   { name: "Sync ID", type: "text"},
   { name: "Button Text", type: "text", defaultValue: "Export to HubSpot"}
 ]);
