@@ -32,12 +32,12 @@ function App() {
 
     for (let i = 0; i < sigmaData[nameColumnId].length; i++) {
       tasks.push({
-            start: new Date(sigmaData[startColumnId][i]),
-            end: new Date(sigmaData[endColumnId][i]),
-            name: sigmaData[nameColumnId][i],
-            id: sigmaData[nameColumnId][i],
-            progress: sigmaData[completionColumnId][i],
-            dependencies: sigmaData[parentTask][i] ?? undefined
+            start: startColumnId && sigmaData[startColumnId][i] ? new Date(sigmaData[startColumnId][i]) : new Date(),
+            end: endColumnId && sigmaData[endColumnId][i] ? new Date(sigmaData[endColumnId][i]) : new Date(),
+            name: nameColumnId ? sigmaData[nameColumnId][i]: undefined,
+            id:  nameColumnId ? sigmaData[nameColumnId][i]: undefined,
+            progress: completionColumnId ? sigmaData[completionColumnId][i] : undefined,
+            dependencies: parentTask ? sigmaData[parentTask][i] ?? undefined : undefined,
           });
     }
     return {
