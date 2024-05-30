@@ -26,7 +26,7 @@ After this, while still in the project directory, you can run:
 
 ## Using This App as a Sigma Plugin
 
-1. Start off by creating a new workbook or opening an existing workbook. Make sure that your workbook has a data table in it that the plugin can read from.
+1. Start off by creating a new workbook or opening an existing workbook. Make sure that your workbook has a data table in it that the plugin can read from. NOTE: For this specific plugin, you must make sure that the dates in the table are in ascending order.
 
 2. Open the "Add element..." tab in the sidebar and add a Plugin (under "UI Elements").
 

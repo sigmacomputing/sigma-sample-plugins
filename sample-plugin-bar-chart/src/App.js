@@ -92,7 +92,7 @@ function App() {
   // arrays of the ids corresponding to the "dimension" and "measures" data columns from the editor panel
   const { dimension, measures } = config;
 
-  if (dimension && measures && Object.keys(columnInfo).length) {
+  if (dimension && measures && Object.keys(columnInfo).length && columnInfo) {
     var dimensionName = columnInfo[dimension].name;
     var numMeasures = measures.length;
   }
@@ -112,7 +112,7 @@ function App() {
   const data = React.useMemo(() => {
     const data = [];
 
-    if (dimension && measures && Object.keys(sigmaData).length) {
+    if (dimension && measures && Object.keys(sigmaData).length && sigmaData) {
       for (let i = 0; i < sigmaData[dimension].length; i++) {
         let row = {};
         row[dimensionName] = sigmaData[dimension][i];

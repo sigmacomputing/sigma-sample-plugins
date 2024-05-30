@@ -13,7 +13,7 @@ import { format, fromUnixTime } from "date-fns";
 client.config.configureEditorPanel([
   { name: "source", type: "element" },
   { name: "dimension", type: "column", source: "source", allowMultiple: true },
-  { name: "measures", type: "column", source: "source", allowMultiple: true },
+  { name: "measures", type: "column", source: "source", allowMultiple: true, allowedTypes: ['number', 'integer'] },
 ]);
 
 const partition = (data) => {

@@ -102,7 +102,7 @@ const drag = simulation => {
 function transform(config, vertices, edges) {
   const {id, to, from, value} = config;
   console.log(arguments);
-  if (!id || !to || !from || !value || !vertices?.[id]?.length || !edges?.[to]?.length) return { nodes: [], links: [] };
+  if (!id || !to || !from || !value || !vertices?.[id]?.length || !edges?.[to]?.length || !edges[value]?.length) return { nodes: [], links: [] };
   const transformed = {
     nodes: vertices[id].map((id) => ({ id, group: 1 })),
     links: edges[to].map((target, idx) => ({
