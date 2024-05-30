@@ -11,6 +11,14 @@ client.config.configureEditorPanel([
   {name: "end", type: "column", allowMultiple: false, source: "source", allowedTypes: ["datetime"]},
   {name: "completion rate", type: "column", allowMultiple: false, source: "source", allowedTypes: ["number"] }
 ])
+
+function validateData(columnId, sigmaData, i, defaultValue) {
+  if(columnId && sigmaData[columnId] && sigmaData[columnId][i]) {
+    return sigmaData[columnId][i];
+  }
+  return defaultValue;
+}
+
 function App() {
   const config = useConfig();
   const columns = useElementColumns(config.source);
@@ -24,7 +32,6 @@ function App() {
     const nameColumnId = config['task name'];
     const completionColumnId = config['completion rate'];
     const parentTask = config['parent task'];
-    console.log(startColumnId, endColumnId, nameColumnId, completionColumnId, parentTask)
     const tasks = [];
     if (!sigmaData[nameColumnId]) {
       return;
@@ -32,12 +39,12 @@ function App() {
 
     for (let i = 0; i < sigmaData[nameColumnId].length; i++) {
       tasks.push({
-            start: startColumnId && sigmaData[startColumnId][i] ? new Date(sigmaData[startColumnId][i]) : new Date(),
-            end: endColumnId && sigmaData[endColumnId][i] ? new Date(sigmaData[endColumnId][i]) : new Date(),
-            name: nameColumnId ? sigmaData[nameColumnId][i]: undefined,
-            id:  nameColumnId ? sigmaData[nameColumnId][i]: undefined,
-            progress: completionColumnId ? sigmaData[completionColumnId][i] : undefined,
-            dependencies: parentTask ? sigmaData[parentTask][i] ?? undefined : undefined,
+            start: new Date(validateData(startColumnId, sigmaData, i, new Date())),
+            end: new Date(validateData(endColumnId, sigmaData, i, new Date())),
+            name: validateData(nameColumnId, sigmaData, i, undefined),
+            id:  validateData(nameColumnId, sigmaData, i, undefined),
+            progress: validateData(completionColumnId, sigmaData, i, undefined),
+            dependencies: validateData(parentTask, sigmaData, i, undefined),
           });
     }
     return {
