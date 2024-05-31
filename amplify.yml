@@ -3,38 +3,33 @@ applications:
     -   appRoot: frappe-gantt
         frontend:
             phases:
+                preBuild:
+                    commands:
+                        - 'yarn install'
                 build:
-                    commands: ['yarn build']
+                    commands:
+                        - 'yarn build'
             artifacts:
                 baseDirectory: build
-        phases:
-            preBuild:
-                commands:
-                    - 'yarn install'
-            build:
-                commands:
-                    - 'yarn build'
-        artifacts:
-            baseDirectory: build
-            files:
-                - '**/*'
-        cache:
-            paths:
-                - 'node_modules/**/*'
+                files:
+                    - '**/*'
+            cache:
+                paths:
+                    - 'node_modules/**/*'
     -   appRoot: orgchart
         frontend:
-          phases:
-              preBuild:
-                  commands:
-                      - 'yarn install'
-              build:
-                  commands:
-                      - 'yarn build'
-          artifacts:
-              baseDirectory: build
-              files:
-                  - '**/*'
-          cache:
-              paths:
-                  - 'node_modules/**/*'
+            phases:
+                preBuild:
+                    commands:
+                        - 'yarn install'
+                build:
+                    commands:
+                        - 'yarn build'
+            artifacts:
+                baseDirectory: build
+                files:
+                    - '**/*'
+            cache:
+                paths:
+                    - 'node_modules/**/*'
 
