@@ -6,8 +6,5 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@sigmacomputing/plugin'],
   },
-  server: {
-    cors: true,
-  },
   plugins: [react()],
 });
