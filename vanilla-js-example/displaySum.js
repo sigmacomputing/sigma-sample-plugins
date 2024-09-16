@@ -10,17 +10,17 @@ client.config.configureEditorPanel([
   },
 ]);
 
-let columnName;
-
 export function updateDisplay(element) {
-  const _unsubscribe2 = client.elements.subscribeToElementColumns(
-    client.config.getKey('exampleSource'),
-    columns => {
-      columnName = columns[client.config.getKey('exampleColumn')]?.name;
-    }
-  );
+  let columnName;
+  const unsubscribeFromElementColumns =
+    client.elements.subscribeToElementColumns(
+      client.config.getKey('exampleSource'),
+      columns => {
+        columnName = columns[client.config.getKey('exampleColumn')]?.name;
+      }
+    );
 
-  const _unsubscribe = client.elements.subscribeToElementData(
+  const unsubscribeFromElementData = client.elements.subscribeToElementData(
     client.config.getKey('exampleSource'),
     data => {
       const dataArray = data[client.config.getKey('exampleColumn')];
