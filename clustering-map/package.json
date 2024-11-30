@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@sigmacomputing/plugin": "^0.6.92",
-    "copy-to-clipboard": "^3.3.1",
+    "copy-to-clipboard": "^3.3.2",
     "deck.gl": "8.3.11",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
