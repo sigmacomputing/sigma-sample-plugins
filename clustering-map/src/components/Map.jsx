@@ -3,9 +3,9 @@ import { StaticMap } from 'react-map-gl';
 import DeckGL from '@deck.gl/react';
 import { MapView } from '@deck.gl/core';
 
-import { ReactComponent as ZoomIn } from '../assets/add.svg';
-import { ReactComponent as ZoomOut } from '../assets/negative.svg';
-import { ReactComponent as Center } from '../assets/reticle.svg';
+import ZoomIn from '../assets/add.svg?react';
+import ZoomOut from '../assets/negative.svg?react';
+import Center from '../assets/reticle.svg?react';
 import iconMapping from '../assets/location-icon-mapping.json'
 import iconAtlas from '../assets/location-icon-atlas.png'
 import { renderContextMenu } from './ContextMenu';
