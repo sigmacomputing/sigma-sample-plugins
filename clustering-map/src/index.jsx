@@ -3,10 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import mapboxgl from 'mapbox-gl';
-// @ts-ignore
-// eslint-disable-next-line import/no-webpack-loader-syntax
-mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+import 'mapbox-gl/dist/mapbox-gl.css'; 
 
 ReactDOM.render(
   <React.StrictMode>
