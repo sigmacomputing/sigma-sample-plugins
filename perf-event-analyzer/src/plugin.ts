@@ -18,7 +18,7 @@ const configOptions: CustomPluginConfigOptions[] = [
     label: 'Session Id',
     source: 'dataSource',
     allowMultiple: false,
-    allowedTypes: ['variant'],
+    allowedTypes: ['text'],
   },
   {
     type: 'column',
