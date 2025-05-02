@@ -96,8 +96,14 @@ export function useFetchDataFromSigma() {
   // TODO: Filter resourceTimings to exclude font downloads
 
   useEffect(() => {
-    console.log(sigmaData[config.column1]);
-  }, [config, sigmaData]);
+    console.log({
+      isMultipleSessionIds,
+      resourceTimings,
+      annotations,
+      marks,
+      offset,
+    });
+  }, [isMultipleSessionIds, resourceTimings, annotations, marks, offset]);
 
   return {
     isMultipleSessionIds,
