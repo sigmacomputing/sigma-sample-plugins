@@ -19,6 +19,7 @@ function App() {
   const chartRef = useRef<ECharts>();
   const [chartOptions] = useState(options);
 
+  // TODO: Make this come from a plugin fetch
   const sampleData = useMemo<IncomingDataType>(() => {
     return getData();
   }, []);

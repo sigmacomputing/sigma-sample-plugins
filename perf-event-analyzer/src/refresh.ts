@@ -18,7 +18,7 @@ export function useChartRefresh(
   chartElementRef: React.RefObject<HTMLDivElement>,
   chartRef: React.MutableRefObject<echarts.ECharts | undefined>,
   chartOptions: EChartsOption,
-  sampleData: IncomingDataType
+  data: IncomingDataType
 ) {
   // Initialize chart
   useEffect(() => {
@@ -53,7 +53,7 @@ export function useChartRefresh(
             ...chartOptions,
             series: Array.isArray(chartOptions.series)
               ? chartOptions.series.map((series, index) =>
-                  index === 0 ? { ...series, data: sampleData } : series
+                  index === 0 ? { ...series, data } : series
                 )
               : [
                   {
@@ -88,7 +88,7 @@ export function useChartRefresh(
                         },
                       };
                     },
-                    data: sampleData,
+                    data,
                   },
                 ],
           };
@@ -123,5 +123,5 @@ export function useChartRefresh(
         chartRef.current.dispose();
       }
     };
-  }, [chartElementRef, chartOptions, chartRef, sampleData]);
+  }, [chartElementRef, chartOptions, chartRef, data]);
 }
