@@ -98,9 +98,11 @@ export function useFetchDataFromSigma() {
   useEffect(() => {
     console.log({
       isMultipleSessionIds,
-      resourceTimings,
-      annotations,
-      marks,
+      resourceTimings: resourceTimings.map(jsonOutput =>
+        JSON.parse(jsonOutput)
+      ),
+      annotations: annotations.map(jsonOutput => JSON.parse(jsonOutput)),
+      marks: marks.map(jsonOutput => JSON.parse(jsonOutput)),
       offset,
     });
   }, [isMultipleSessionIds, resourceTimings, annotations, marks, offset]);
