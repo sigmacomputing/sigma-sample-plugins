@@ -4,6 +4,7 @@ import {
   CustomSeriesRenderItemReturn,
   EChartsOption,
 } from 'echarts';
+import { logIfDebug } from './log';
 
 export const options: EChartsOption = {
   backgroundColor: {
@@ -41,25 +42,44 @@ export const options: EChartsOption = {
         const name = value[3] || typedParams.data.name || 'Event';
         const start = value[1];
         const end = value[2];
-        const duration = end - start;
+        const isPointInTime = value[5] === 1;
 
-        return `
-          <div style="font-weight: bold; margin-bottom: 3px; font-size: 14px;">${name}</div>
-          <table style="width: 100%; border-spacing: 0; margin-top: 5px;">
-            <tr>
-              <td style="padding: 3px 0;">Start:</td>
-              <td style="text-align: right; padding: 3px 0;">${start} ms</td>
-            </tr>
-            <tr>
-              <td style="padding: 3px 0;">End:</td>
-              <td style="text-align: right; padding: 3px 0;">${end} ms</td>
-            </tr>
-            <tr>
-              <td style="padding: 3px 0;">Duration:</td>
-              <td style="text-align: right; padding: 3px 0;">${duration} ms</td>
-            </tr>
-          </table>
-        `;
+        if (isPointInTime) {
+          // For point-in-time events
+          return `
+            <div style="font-weight: bold; margin-bottom: 3px; font-size: 14px;">${name}</div>
+            <table style="width: 100%; border-spacing: 0; margin-top: 5px;">
+              <tr>
+                <td style="padding: 3px 0;">Time:</td>
+                <td style="text-align: right; padding: 3px 0;">${start} ms</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 0;">Type:</td>
+                <td style="text-align: right; padding: 3px 0;">Point Event</td>
+              </tr>
+            </table>
+          `;
+        } else {
+          // For time range events
+          const duration = end - start;
+          return `
+            <div style="font-weight: bold; margin-bottom: 3px; font-size: 14px;">${name}</div>
+            <table style="width: 100%; border-spacing: 0; margin-top: 5px;">
+              <tr>
+                <td style="padding: 3px 0;">Start:</td>
+                <td style="text-align: right; padding: 3px 0;">${start} ms</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 0;">End:</td>
+                <td style="text-align: right; padding: 3px 0;">${end} ms</td>
+              </tr>
+              <tr>
+                <td style="padding: 3px 0;">Duration:</td>
+                <td style="text-align: right; padding: 3px 0;">${duration} ms</td>
+              </tr>
+            </table>
+          `;
+        }
       }
       return 'No data available';
     },
@@ -186,22 +206,77 @@ function renderItem(
   api: CustomSeriesRenderItemAPI
 ): CustomSeriesRenderItemReturn {
   // Log values for debugging
-  console.log('Rendering item with values:', {
+  logIfDebug('log', 'Rendering item with values:', {
     level: api.value(0),
     start: api.value(1),
     end: api.value(2),
     name: api.value(3),
     percentage: api.value(4),
+    isPointInTime: api.value(5),
   });
+
   const level = api.value(0);
-  const start = api.coord([api.value(1), level]);
-  const end = api.coord([api.value(2), level]);
+  const startTime = api.value(1);
+  const endTime = api.value(2);
+  const isPointInTime = api.value(5) === 1;
+
+  // Get coordinates
+  const start = api.coord([startTime, level]);
+  const end = api.coord([endTime, level]);
+
+  // Get size information
   const apiSize = api.size && api.size([0, 1]);
   if (typeof apiSize === 'number') {
     throw new Error('Invalid api.size');
   }
   const height = (apiSize || [0, 20])[1];
   const width = end[0] - start[0];
+
+  // If this is a point-in-time event, render a circle
+  if (isPointInTime) {
+    const pointX = start[0];
+    const pointY = start[1];
+    const radius = height / 4;
+
+    return {
+      type: 'circle' as const,
+      transition: ['shape'],
+      shape: {
+        cx: pointX,
+        cy: pointY,
+        r: radius,
+      },
+      style: {
+        fill: api.visual('color'),
+      },
+      emphasis: {
+        style: {
+          stroke: '#000',
+          lineWidth: 1,
+        },
+      },
+      textConfig: {
+        position: 'right',
+        distance: 5,
+      },
+      textContent: {
+        type: 'text',
+        style: {
+          text: api.value(3).toString(),
+          fontFamily: 'Verdana',
+          fill: '#000',
+        },
+        emphasis: {
+          style: {
+            stroke: '#000',
+            lineWidth: 0.5,
+          },
+        },
+      },
+    };
+  }
+
+  // Otherwise render a rectangle for time ranges
   return {
     type: 'rect' as const,
     transition: ['shape'],

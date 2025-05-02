@@ -7,9 +7,12 @@ import {
 } from 'echarts';
 import { useEffect } from 'react';
 import { DEBUG, IncomingDataType } from './App';
+import { logIfDebug } from './log';
 
 // Define a type for our custom data format
-export type CustomDataValue = [number, number, number, string, number];
+// [level, startTime, endTime, name, percentage, isPointInTime]
+// isPointInTime: 1 = point in time (dot), 0 = time range (rectangle)
+export type CustomDataValue = [number, number, number, string, number, number?];
 
 export function useChartRefresh(
   chartElementRef: React.RefObject<HTMLDivElement>,
@@ -23,7 +26,8 @@ export function useChartRefresh(
     const timer = setTimeout(() => {
       if (chartElementRef.current) {
         // Log container dimensions for debugging
-        console.log(
+        logIfDebug(
+          'log',
           'Container dimensions:',
           chartElementRef.current.clientWidth,
           chartElementRef.current.clientHeight
@@ -35,7 +39,7 @@ export function useChartRefresh(
             chartElementRef.current.clientWidth === 0 ||
             chartElementRef.current.clientHeight === 0
           ) {
-            console.error('Chart container has zero width or height');
+            logIfDebug('error', 'Chart container has zero width or height');
             return;
           }
 
@@ -58,7 +62,11 @@ export function useChartRefresh(
                       params: CustomSeriesRenderItemParams,
                       api: CustomSeriesRenderItemAPI
                     ): CustomSeriesRenderItemReturn {
-                      console.log('renderItem called with params:', params);
+                      logIfDebug(
+                        'log',
+                        'renderItem called with params:',
+                        params
+                      );
                       const level = api.value(0);
                       const start = api.coord([api.value(1), level]);
                       const end = api.coord([api.value(2), level]);
@@ -86,7 +94,8 @@ export function useChartRefresh(
           };
 
           if (DEBUG) {
-            console.log(
+            logIfDebug(
+              'log',
               'Setting chart options:',
               JSON.stringify(fullOptions, null, 2)
             );
@@ -94,16 +103,16 @@ export function useChartRefresh(
           chart.setOption(fullOptions);
 
           if (DEBUG) {
-            console.log('Chart initialized successfully');
+            logIfDebug('log', 'Chart initialized successfully');
           }
         } catch (error) {
           if (DEBUG) {
-            console.error('Error initializing chart:', error);
+            logIfDebug('error', 'Error initializing chart:', error);
           }
         }
       } else {
         if (DEBUG) {
-          console.error('Chart container not found');
+          logIfDebug('error', 'Chart container not found');
         }
       }
     }, 100);

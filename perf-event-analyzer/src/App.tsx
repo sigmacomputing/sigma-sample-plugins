@@ -4,6 +4,7 @@ import { options } from './options';
 import { useHandleResize } from './resize';
 import { CustomDataValue, useChartRefresh } from './refresh';
 import { getData } from './data';
+import { logIfDebug } from './log';
 
 export const DEBUG = false;
 
@@ -26,21 +27,17 @@ function App() {
 
   const refreshChart = useCallback(() => {
     if (chartRef.current) {
-      if (DEBUG) {
-        console.log('Manually refreshing chart');
-      }
+      logIfDebug('log', 'Manually refreshing chart');
       chartRef.current.resize();
 
       // Force a redraw with the same options
       const currentOption = chartRef.current.getOption();
       chartRef.current.setOption(currentOption, true);
 
-      if (DEBUG) {
-        console.log('Chart refreshed');
-      }
+      logIfDebug('log', 'Chart refreshed');
     } else {
       if (DEBUG) {
-        console.error('Chart not initialized');
+        logIfDebug('error', 'Chart not initialized');
       }
     }
   }, []);
