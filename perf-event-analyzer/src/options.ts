@@ -1,8 +1,12 @@
 import {
   CustomSeriesRenderItemAPI,
   CustomSeriesRenderItemParams,
+  CustomSeriesRenderItemReturn,
   EChartsOption,
 } from 'echarts';
+
+// Define a type for our custom data format
+type CustomDataValue = [number, number, number, string, number];
 
 export const options: EChartsOption = {
   backgroundColor: {
@@ -24,6 +28,54 @@ export const options: EChartsOption = {
   },
   tooltip: {
     show: true,
+    trigger: 'item',
+    formatter: function (params: unknown) {
+      // Type assertion for the params object
+      const typedParams = params as {
+        data?: {
+          name?: string;
+          value?: number[];
+        };
+      };
+
+      // For custom series, we need to access the data directly
+      if (typedParams.data && Array.isArray(typedParams.data.value)) {
+        const value = typedParams.data.value;
+        const name = value[3] || typedParams.data.name || 'Event';
+        const start = value[1];
+        const end = value[2];
+        const duration = end - start;
+
+        return `
+          <div style="font-weight: bold; margin-bottom: 3px; font-size: 14px;">${name}</div>
+          <table style="width: 100%; border-spacing: 0; margin-top: 5px;">
+            <tr>
+              <td style="padding: 3px 0;">Start:</td>
+              <td style="text-align: right; padding: 3px 0;">${start} ms</td>
+            </tr>
+            <tr>
+              <td style="padding: 3px 0;">End:</td>
+              <td style="text-align: right; padding: 3px 0;">${end} ms</td>
+            </tr>
+            <tr>
+              <td style="padding: 3px 0;">Duration:</td>
+              <td style="text-align: right; padding: 3px 0;">${duration} ms</td>
+            </tr>
+          </table>
+        `;
+      }
+      return 'No data available';
+    },
+    backgroundColor: 'rgba(50, 50, 50, 0.95)',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: [8, 10],
+    textStyle: {
+      color: '#fff',
+      fontSize: 12,
+    },
+    extraCssText:
+      'box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); border-radius: 4px;',
   },
   title: [
     {
@@ -37,12 +89,81 @@ export const options: EChartsOption = {
       },
     },
   ],
+  dataZoom: [
+    {
+      type: 'inside',
+      start: 0,
+      end: 100,
+    },
+    {
+      type: 'slider',
+      start: 0,
+      end: 100,
+      height: 25,
+      bottom: 10,
+      handleSize: 20,
+      showDetail: false,
+    },
+  ],
   xAxis: {
-    show: false,
+    show: true,
+    type: 'value',
+    name: 'Time (ms)',
+    nameLocation: 'middle',
+    nameGap: 30,
+    min: 0,
+    max: 'dataMax',
+    interval: 20, // Show ticks every 20ms
+    axisLabel: {
+      formatter: '{value} ms',
+      showMinLabel: true,
+      showMaxLabel: true,
+      fontSize: 12,
+      margin: 10,
+    },
+    splitLine: {
+      show: true,
+      lineStyle: {
+        type: 'dashed',
+        opacity: 0.5,
+      },
+    },
+    axisLine: {
+      show: true,
+      lineStyle: {
+        color: '#999',
+        width: 1,
+      },
+    },
+    axisTick: {
+      show: true,
+      length: 5,
+      lineStyle: {
+        color: '#999',
+        width: 1,
+      },
+    },
   },
   yAxis: {
-    show: false,
+    show: true,
+    type: 'category',
     max: 10, // dummy value
+    axisLabel: {
+      show: false,
+    },
+    axisLine: {
+      show: false,
+    },
+    axisTick: {
+      show: false,
+    },
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '15%',
+    top: '15%',
+    containLabel: true,
   },
   series: [
     {
@@ -52,22 +173,40 @@ export const options: EChartsOption = {
         x: [0, 1, 2],
         y: 0,
       },
-      data: [], // Data to be filled in
+      data: [
+        {
+          value: [0, 0, 100, 'root', 100],
+          name: 'root',
+          itemStyle: { color: '#FFFFFF' },
+        },
+      ],
     },
   ],
 };
 
 function renderItem(
-  params: CustomSeriesRenderItemParams,
+  _params: CustomSeriesRenderItemParams,
   api: CustomSeriesRenderItemAPI
-) {
+): CustomSeriesRenderItemReturn {
+  // Log values for debugging
+  console.log('Rendering item with values:', {
+    level: api.value(0),
+    start: api.value(1),
+    end: api.value(2),
+    name: api.value(3),
+    percentage: api.value(4),
+  });
   const level = api.value(0);
   const start = api.coord([api.value(1), level]);
   const end = api.coord([api.value(2), level]);
-  const height = ((api.size && api.size([0, 1])) || [0, 20])[1];
+  const apiSize = api.size && api.size([0, 1]);
+  if (typeof apiSize === 'number') {
+    throw new Error('Invalid api.size');
+  }
+  const height = (apiSize || [0, 20])[1];
   const width = end[0] - start[0];
   return {
-    type: 'rect',
+    type: 'rect' as const,
     transition: ['shape'],
     shape: {
       x: start[0],
@@ -88,8 +227,9 @@ function renderItem(
       position: 'insideLeft',
     },
     textContent: {
+      type: 'text',
       style: {
-        text: api.value(3),
+        text: api.value(3).toString(),
         fontFamily: 'Verdana',
         fill: '#000',
         width: width - 4,
