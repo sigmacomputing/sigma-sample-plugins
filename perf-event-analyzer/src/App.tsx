@@ -20,8 +20,7 @@ function App() {
   const chartRef = useRef<ECharts>();
   const [chartOptions] = useState(options);
 
-  const { isMultipleSessionIds, resourceTimings, annotations, marks, offset } =
-    useFetchDataFromSigma();
+  const { isMultipleSessionIds } = useFetchDataFromSigma();
   // TODO: Make this come from a plugin fetch
   const sampleData = useMemo<IncomingDataType>(() => {
     return getData();
