@@ -5,6 +5,7 @@ import { useHandleResize } from './resize';
 import { CustomDataValue, useChartRefresh } from './refresh';
 import { getData } from './data';
 import { logIfDebug } from './log';
+import { useFetchDataFromSigma } from './plugin';
 
 export const DEBUG = false;
 
@@ -19,6 +20,8 @@ function App() {
   const chartRef = useRef<ECharts>();
   const [chartOptions] = useState(options);
 
+  const { isMultipleSessionIds, resourceTimings, annotations, marks, offset } =
+    useFetchDataFromSigma();
   // TODO: Make this come from a plugin fetch
   const sampleData = useMemo<IncomingDataType>(() => {
     return getData();
@@ -45,6 +48,10 @@ function App() {
 
   useHandleResize(chartRef);
 
+  if (isMultipleSessionIds) {
+    return 'Multiple session ids in data source! This plugin is only built to support one session id.';
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       <div
@@ -59,9 +66,7 @@ function App() {
           backgroundColor: '#fff',
         }}
         ref={chartElementRef}
-      >
-        {/* The chart will render here */}
-      </div>
+      />
 
       <div style={{ display: 'flex', gap: '10px' }}>
         <button
