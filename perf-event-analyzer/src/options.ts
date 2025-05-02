@@ -5,9 +5,6 @@ import {
   EChartsOption,
 } from 'echarts';
 
-// Define a type for our custom data format
-type CustomDataValue = [number, number, number, string, number];
-
 export const options: EChartsOption = {
   backgroundColor: {
     type: 'linear',
