@@ -6,6 +6,16 @@ import {
 } from '@sigmacomputing/plugin';
 import { useEffect, useMemo, useState } from 'react';
 
+export type Marks = Record<string, number>;
+
+export type ResourceTiming = {
+  decodedBodySize: number;
+  encodedBodySize: number;
+  name: string;
+  timeRange: [number, number];
+};
+export type ResourceTimings = ResourceTiming[];
+
 const configOptions: CustomPluginConfigOptions[] = [
   {
     type: 'element',
@@ -24,14 +34,6 @@ const configOptions: CustomPluginConfigOptions[] = [
     type: 'column',
     name: 'resourceTimings',
     label: 'Resource Timings',
-    source: 'dataSource',
-    allowMultiple: false,
-    allowedTypes: ['variant'],
-  },
-  {
-    type: 'column',
-    name: 'annotations',
-    label: 'Annotations',
     source: 'dataSource',
     allowMultiple: false,
     allowedTypes: ['variant'],
@@ -61,24 +63,29 @@ export function useFetchDataFromSigma() {
 
   const [isMultipleSessionIds, setIsMultipleSessionIds] = useState(false);
 
-  const sessionIds = useMemo(
+  const sessionIds = useMemo<string[] | undefined>(
     () => sigmaData[config.sessionId],
     [config, sigmaData]
   );
 
-  const resourceTimings = useMemo(
-    () => sigmaData[config.resourceTimings],
+  const resourceTimings = useMemo<ResourceTimings[] | undefined>(() => {
+    const initialData = sigmaData[config.resourceTimings];
+    // TODO: Filter resourceTimings to exclude font downloads
+
+    return initialData?.map(jsonOutput => JSON.parse(jsonOutput));
+  }, [config, sigmaData]);
+
+  // TODO: Figure out the type here
+  const marks = useMemo<Marks[] | undefined>(() => {
+    const initialData = sigmaData[config.marks];
+
+    return initialData?.map(jsonOutput => JSON.parse(jsonOutput));
+  }, [config, sigmaData]);
+
+  const offsets = useMemo<number[] | undefined>(
+    () => sigmaData[config.offset],
     [config, sigmaData]
   );
-
-  const annotations = useMemo(
-    () => sigmaData[config.annotations],
-    [config, sigmaData]
-  );
-
-  const marks = useMemo(() => sigmaData[config.marks], [config, sigmaData]);
-
-  const offset = useMemo(() => sigmaData[config.offset], [config, sigmaData]);
 
   useEffect(() => {
     const uniqueSessionIds = new Set(sessionIds);
@@ -93,25 +100,19 @@ export function useFetchDataFromSigma() {
     };
   }, [sessionIds]);
 
-  // TODO: Filter resourceTimings to exclude font downloads
-
   useEffect(() => {
     console.log({
       isMultipleSessionIds,
-      resourceTimings: resourceTimings?.map(jsonOutput =>
-        JSON.parse(jsonOutput)
-      ),
-      annotations: annotations?.map(jsonOutput => JSON.parse(jsonOutput)),
-      marks: marks?.map(jsonOutput => JSON.parse(jsonOutput)),
-      offset,
+      resourceTimings,
+      marks,
+      offsets,
     });
-  }, [isMultipleSessionIds, resourceTimings, annotations, marks, offset]);
+  }, [isMultipleSessionIds, resourceTimings, marks, offsets]);
 
   return {
     isMultipleSessionIds,
     resourceTimings,
-    annotations,
     marks,
-    offset,
+    offsets,
   };
 }

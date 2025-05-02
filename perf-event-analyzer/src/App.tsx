@@ -1,32 +1,33 @@
 import type { ECharts } from 'echarts';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { options } from './options';
 import { useHandleResize } from './resize';
 import { CustomDataValue, useChartRefresh } from './refresh';
-import { getData } from './data';
 import { logIfDebug } from './log';
 import { useFetchDataFromSigma } from './plugin';
+import { useTransformData } from './transform';
 
 export const DEBUG = false;
 
-export type IncomingDataType = {
+export type IncomingDataEntry = {
   name: string;
   value: CustomDataValue;
   itemStyle: { color: string };
-}[];
+};
+
+export type IncomingDataType = IncomingDataEntry[];
 
 function App() {
   const chartElementRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<ECharts>();
   const [chartOptions] = useState(options);
 
-  const { isMultipleSessionIds } = useFetchDataFromSigma();
-  // TODO: Make this come from a plugin fetch
-  const sampleData = useMemo<IncomingDataType>(() => {
-    return getData();
-  }, []);
+  const { isMultipleSessionIds, resourceTimings, marks, offsets } =
+    useFetchDataFromSigma();
 
-  useChartRefresh(chartElementRef, chartRef, chartOptions, sampleData);
+  const transformedData = useTransformData(resourceTimings, marks, offsets);
+
+  useChartRefresh(chartElementRef, chartRef, chartOptions, transformedData);
 
   const refreshChart = useCallback(() => {
     if (chartRef.current) {

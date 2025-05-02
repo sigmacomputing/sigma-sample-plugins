@@ -10,9 +10,14 @@ import { DEBUG, IncomingDataType } from './App';
 import { logIfDebug } from './log';
 
 // Define a type for our custom data format
-// [level, startTime, endTime, name, percentage, isPointInTime]
+// [level, startTime, endTime, name, isPointInTime]
 // isPointInTime: 1 = point in time (dot), 0 = time range (rectangle)
-export type CustomDataValue = [number, number, number, string, number, number?];
+type Level = number;
+type StartTime = number;
+type EndTime = number;
+type Name = string;
+type IsPointInTime = 0 | 1;
+export type CustomDataValue = [Level, StartTime, EndTime, Name, IsPointInTime?];
 
 export function useChartRefresh(
   chartElementRef: React.RefObject<HTMLDivElement>,
