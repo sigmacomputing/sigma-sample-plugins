@@ -93,7 +93,6 @@ function calculateLevel(
 ) {
   let level = 0;
   while (level < MAX_LEVEL) {
-    console.log(data, startTime, endTime, level);
     if (
       data.every(
         entry =>

@@ -130,7 +130,6 @@ export const options: EChartsOption = {
     nameGap: 30,
     min: 0,
     max: 'dataMax',
-    interval: 20, // Show ticks every 20ms
     axisLabel: {
       formatter: '{value} ms',
       showMinLabel: true,
