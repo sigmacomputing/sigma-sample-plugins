@@ -3,7 +3,7 @@ import { Marks, ResourceTiming, ResourceTimings } from './plugin';
 
 const resourceTimingColor = '#FF00FF';
 const markColor = '#00FFFF';
-const MAX_LEVEL = 100;
+const MAX_LEVEL = 400;
 
 export function useTransformData(
   resourceTimingsArray: ResourceTimings[] | undefined,
