@@ -239,14 +239,13 @@ function renderItem(
     start: api.value(1),
     end: api.value(2),
     name: api.value(3),
-    percentage: api.value(4),
-    isPointInTime: api.value(5),
+    isPointInTime: api.value(4),
   });
 
   const level = api.value(0);
   const startTime = api.value(1);
   const endTime = api.value(2);
-  const isPointInTime = api.value(5) === 1;
+  const isPointInTime = api.value(4) === 1;
 
   // Get coordinates
   const start = api.coord([startTime, level]);
@@ -281,24 +280,6 @@ function renderItem(
         style: {
           stroke: '#000',
           lineWidth: 1,
-        },
-      },
-      textConfig: {
-        position: 'right',
-        distance: 5,
-      },
-      textContent: {
-        type: 'text',
-        style: {
-          text: api.value(3).toString(),
-          fontFamily: 'Verdana',
-          fill: '#000',
-        },
-        emphasis: {
-          style: {
-            stroke: '#000',
-            lineWidth: 0.5,
-          },
         },
       },
     };

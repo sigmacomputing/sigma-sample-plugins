@@ -6,9 +6,6 @@ import { CustomDataValue, useChartRefresh } from './refresh';
 import { logIfDebug } from './log';
 import { useFetchDataFromSigma } from './plugin';
 import { useTransformData } from './transform';
-import { logData } from './data';
-
-export const DEBUG = false;
 
 export type IncomingDataEntry = {
   name: string;
@@ -28,12 +25,6 @@ function App() {
 
   const transformedData = useTransformData(resourceTimings, marks, offsets);
 
-  console.log(
-    logData.resourceTimings[0].length + logData.resourceTimings[1].length,
-    Object.keys(logData.marks[0]).length + Object.keys(logData.marks[1]).length,
-    transformedData.length
-  );
-
   useChartRefresh(chartElementRef, chartRef, chartOptions, transformedData);
 
   const refreshChart = useCallback(() => {
@@ -47,9 +38,7 @@ function App() {
 
       logIfDebug('log', 'Chart refreshed');
     } else {
-      if (DEBUG) {
-        logIfDebug('error', 'Chart not initialized');
-      }
+      logIfDebug('error', 'Chart not initialized');
     }
   }, []);
 

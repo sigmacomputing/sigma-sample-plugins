@@ -6,7 +6,7 @@ import {
   init,
 } from 'echarts';
 import { useEffect } from 'react';
-import { DEBUG, IncomingDataType } from './App';
+import { IncomingDataType } from './App';
 import { logIfDebug } from './log';
 
 // Define a type for our custom data format
@@ -98,27 +98,19 @@ export function useChartRefresh(
                 ],
           };
 
-          if (DEBUG) {
-            logIfDebug(
-              'log',
-              'Setting chart options:',
-              JSON.stringify(fullOptions, null, 2)
-            );
-          }
+          logIfDebug(
+            'log',
+            'Setting chart options:',
+            JSON.stringify(fullOptions, null, 2)
+          );
           chart.setOption(fullOptions);
 
-          if (DEBUG) {
-            logIfDebug('log', 'Chart initialized successfully');
-          }
+          logIfDebug('log', 'Chart initialized successfully');
         } catch (error) {
-          if (DEBUG) {
-            logIfDebug('error', 'Error initializing chart:', error);
-          }
+          logIfDebug('error', 'Error initializing chart:', error);
         }
       } else {
-        if (DEBUG) {
-          logIfDebug('error', 'Chart container not found');
-        }
+        logIfDebug('error', 'Chart container not found');
       }
     }, 100);
 
