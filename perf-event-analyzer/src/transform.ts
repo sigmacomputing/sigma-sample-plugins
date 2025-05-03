@@ -2,6 +2,7 @@ import { IncomingDataEntry, IncomingDataType } from './App';
 import { Marks, ResourceTiming, ResourceTimings } from './plugin';
 
 const consistentColor = '#FF00FF';
+const MAX_LEVEL = 100;
 
 export function useTransformData(
   resourceTimingsArray: ResourceTimings[] | undefined,
@@ -27,10 +28,22 @@ export function useTransformData(
     (previousArray, resourceTimings, i) => {
       const currentOffset = normalizedOffsets[i];
       for (const resourceTiming of resourceTimings) {
-        const entry = transformResourceTiming(resourceTiming, currentOffset);
+        const startTime = resourceTiming.timeRange[0] + currentOffset;
+        const endTime = resourceTiming.timeRange[1] + currentOffset;
+        const level = calculateLevel(startTime, endTime, previousArray);
+
+        const entry = transformResourceTiming(
+          resourceTiming,
+          currentOffset,
+          level
+        );
         previousArray.push(entry);
       }
-      const markEntries = transformMarks(marks[i], currentOffset);
+      const markEntries = transformMarks(
+        marks[i],
+        currentOffset,
+        previousArray
+      );
       previousArray.push(...markEntries);
       return previousArray;
     },
@@ -42,12 +55,13 @@ export function useTransformData(
 
 function transformResourceTiming(
   resourceTiming: ResourceTiming,
-  offset: number
+  offset: number,
+  level: number
 ): IncomingDataEntry {
   return {
     name: resourceTiming.name,
     value: [
-      0,
+      level,
       resourceTiming.timeRange[0] + offset,
       resourceTiming.timeRange[1] + offset,
       resourceTiming.name,
@@ -57,10 +71,38 @@ function transformResourceTiming(
   };
 }
 
-function transformMarks(marks: Marks, offset: number): IncomingDataEntry[] {
-  return Object.entries(marks).map(([name, time]) => ({
-    name,
-    value: [0, time + offset, time + offset, name, 1],
-    itemStyle: { color: consistentColor },
-  }));
+function transformMarks(
+  marks: Marks,
+  offset: number,
+  previousArray: IncomingDataType
+): IncomingDataEntry[] {
+  return Object.entries(marks).map(([name, time]) => {
+    const level = calculateLevel(time, time, previousArray);
+    return {
+      name,
+      value: [level, time + offset, time + offset, name, 1],
+      itemStyle: { color: consistentColor },
+    };
+  });
+}
+
+function calculateLevel(
+  startTime: number,
+  endTime: number,
+  data: IncomingDataType
+) {
+  const level = 0;
+  while (level < MAX_LEVEL) {
+    if (
+      data.every(
+        entry =>
+          entry.value[1] <= endTime &&
+          startTime <= entry.value[2] &&
+          entry.value[0] === level
+      )
+    ) {
+      return level;
+    }
+  }
+  throw new Error(`Cannot graph more than ${MAX_LEVEL} levels deep`);
 }
