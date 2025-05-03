@@ -1,0 +1,5 @@
+/* Global styles to prevent overflow */
+html, body, #root {
+  margin: 0;
+}
+

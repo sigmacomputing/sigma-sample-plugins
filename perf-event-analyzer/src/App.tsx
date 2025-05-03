@@ -26,11 +26,7 @@ function App() {
   const { isMultipleSessionIds, resourceTimings, marks, offsets } =
     useFetchDataFromSigma();
 
-  const transformedData = useTransformData(
-    logData.resourceTimings,
-    logData.marks,
-    logData.offsets
-  );
+  const transformedData = useTransformData(resourceTimings, marks, offsets);
 
   console.log(
     logData.resourceTimings[0].length + logData.resourceTimings[1].length,
@@ -64,7 +60,15 @@ function App() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        boxSizing: 'border-box', // Include padding in width calculation
+        padding: '0 10px', // Add some padding on the sides
+      }}
+    >
       <div
         style={{
           width: '100%',
@@ -75,6 +79,8 @@ function App() {
           position: 'relative',
           padding: '10px',
           backgroundColor: '#fff',
+          overflow: 'hidden', // Ensure chart container doesn't overflow
+          boxSizing: 'border-box', // Include padding in width calculation
         }}
         ref={chartElementRef}
       />
