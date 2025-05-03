@@ -91,18 +91,19 @@ function calculateLevel(
   endTime: number,
   data: IncomingDataType
 ) {
-  const level = 0;
+  let level = 0;
   while (level < MAX_LEVEL) {
+    console.log(data, startTime, endTime, level);
     if (
       data.every(
         entry =>
-          entry.value[1] <= endTime &&
-          startTime <= entry.value[2] &&
-          entry.value[0] === level
+          !(entry.value[1] <= endTime && startTime <= entry.value[2]) ||
+          entry.value[0] !== level
       )
     ) {
       return level;
     }
+    level++;
   }
   throw new Error(`Cannot graph more than ${MAX_LEVEL} levels deep`);
 }
