@@ -107,19 +107,45 @@ export const options: EChartsOption = {
     },
   ],
   dataZoom: [
+    // X-axis inside zoom (mouse wheel/pinch)
     {
       type: 'inside',
+      xAxisIndex: 0,
       start: 0,
       end: 100,
     },
+    // X-axis slider zoom
     {
       type: 'slider',
+      xAxisIndex: 0,
       start: 0,
       end: 100,
       height: 25,
       bottom: 10,
       handleSize: 20,
       showDetail: false,
+    },
+    // Y-axis inside zoom (mouse wheel/pinch with modifier key)
+    {
+      type: 'inside',
+      yAxisIndex: 0,
+      start: 0,
+      end: 30, // Show only 30% of the data initially
+      zoomOnMouseWheel: false, // Don't zoom y-axis on normal mouse wheel
+      moveOnMouseWheel: true, // Allow moving the view on mouse wheel
+      moveOnMouseMove: true, // Allow moving on mouse move
+    },
+    // Y-axis slider zoom
+    {
+      type: 'slider',
+      yAxisIndex: 0,
+      width: 25,
+      right: 10,
+      start: 0,
+      end: 30, // Show only 30% of the data initially
+      handleSize: 20,
+      showDetail: false,
+      orient: 'vertical',
     },
   ],
   xAxis: {
@@ -163,7 +189,10 @@ export const options: EChartsOption = {
   yAxis: {
     show: true,
     type: 'category',
-    max: 10, // dummy value
+    // Use dynamic max based on data instead of fixed value
+    max: 'dataMax',
+    // Set a reasonable min value to show a subset of data initially
+    min: 0,
     axisLabel: {
       show: false,
     },
@@ -176,7 +205,7 @@ export const options: EChartsOption = {
   },
   grid: {
     left: '3%',
-    right: '4%',
+    right: '10%', // Increased to make room for y-axis slider
     bottom: '15%',
     top: '15%',
     containLabel: true,
