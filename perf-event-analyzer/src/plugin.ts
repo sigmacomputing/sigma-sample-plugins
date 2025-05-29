@@ -5,6 +5,7 @@ import {
   useElementData,
 } from '@sigmacomputing/plugin';
 import { useEffect, useMemo, useState } from 'react';
+import { logIfDebug } from './log';
 
 export type Marks = Record<string, number>;
 
@@ -101,7 +102,7 @@ export function useFetchDataFromSigma() {
   }, [sessionIds]);
 
   useEffect(() => {
-    console.log({
+    logIfDebug('log', {
       isMultipleSessionIds,
       resourceTimings,
       marks,
