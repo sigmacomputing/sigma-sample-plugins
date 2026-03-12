@@ -31,8 +31,8 @@ const renderInfo = (span, showSpanDetailTitle, spanDetail) => {
             </h2>
             <pre className="TagsCodeBlock" dangerouslySetInnerHTML={{__html: prettyPrintJson.toHtml({
                 ...span.tagsObj,
-                ["errorCode"]: undefined,
-                ["ttc_color"]: undefined,
+                errorCode: undefined,
+                ttc_color: undefined,
             })}}>
             </pre>
 
