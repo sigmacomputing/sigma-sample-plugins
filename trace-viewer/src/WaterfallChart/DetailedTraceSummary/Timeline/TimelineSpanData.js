@@ -2,30 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { prettyPrintJson } from 'pretty-print-json';
 
-import ServiceNameBadge from './ServiceNameBadge';
-import { getServiceNameColor, getColorFromSpan } from '../util/color';
+import { getColorFromSpan } from '../util/color';
 import { detailedSpanPropTypes } from '../prop-types';
 
 const propTypes = {
     serviceNameColumnWidth: PropTypes.number.isRequired,
     span: detailedSpanPropTypes.isRequired,
 };
-
-// Parse string values if objects, to display better objects instead of plain strings.
-const parseTagsData = (tags) => {
-    let parsedTags = {};
-
-    Object.keys(tags).forEach( tagKey => {
-        try {
-            const parsedTagValue = JSON.parse(tags[tagKey]);
-            parsedTags[tagKey] = parsedTagValue;
-        } catch(e) {
-            parsedTags[tagKey] = tags[tagKey];
-        }
-    });
-
-    return parsedTags;
-}
 
 // Render span details info
 const renderInfo = (span, showSpanDetailTitle, spanDetail) => {

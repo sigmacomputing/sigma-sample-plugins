@@ -214,7 +214,6 @@ class Timeline extends React.Component {
     calculateChildsSpanMeasures = (span) => {
         const { spans } = this.props.traceSummary
         let measures = []
-        let left
 
         let childSpan
 
