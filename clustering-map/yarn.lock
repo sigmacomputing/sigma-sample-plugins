@@ -2079,6 +2079,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "clustering-map@workspace:."
   dependencies:
+    "@deck.gl/core": "npm:8.3.11"
+    "@deck.gl/layers": "npm:8.3.11"
+    "@deck.gl/react": "npm:8.3.11"
     "@sigmacomputing/plugin": "npm:^1.1.1"
     "@testing-library/jest-dom": "npm:^5.11.4"
     "@testing-library/react": "npm:^11.1.0"
