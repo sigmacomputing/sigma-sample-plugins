@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sigmacomputing/plugin": "^1.0.6",
+    "@sigmacomputing/plugin": "^1.1.1",
     "copy-to-clipboard": "^3.3.1",
     "deck.gl": "8.3.11",
     "mapbox-gl": "^3.10.0",

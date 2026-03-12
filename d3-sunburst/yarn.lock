@@ -2409,10 +2409,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
-"@sigmacomputing/plugin@^0.6.43":
-  version "0.6.78"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.6.78.tgz#bfc958c34c6b31e74741a0b72b5b1c875127e116"
-  integrity sha512-pQXl9uO+MhNuXiQalshNY/ia8JPObRQFelbX1DkkJlhQV/p0NM01IzmZk3/oggyIWEHQKt/vz7mn+t7h+MtRVA==
+"@sigmacomputing/plugin@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-1.1.1.tgz#a9f92b609abf4324f5707be509ebf6aee55ece37"
+  integrity sha512-vlJX+vibR6Mb9eX/InK28wiMZA4rO0qWzvMaCklJSkXw18XOx7yj8WZ65DOeol6eD9MzkZdEuJtCK+wwv7K0sA==
 
 "@sinclair/typebox@^0.24.1":
   version "0.24.51"
