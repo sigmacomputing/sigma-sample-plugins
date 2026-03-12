@@ -1478,7 +1478,7 @@
 
 "@sigmacomputing/plugin@^1.1.1":
   version "1.1.1"
-  resolved "https://registry.npmjs.org/@sigmacomputing/plugin/-/plugin-1.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-1.1.1.tgz#a9f92b609abf4324f5707be509ebf6aee55ece37"
   integrity sha512-vlJX+vibR6Mb9eX/InK28wiMZA4rO0qWzvMaCklJSkXw18XOx7yj8WZ65DOeol6eD9MzkZdEuJtCK+wwv7K0sA==
 
 "@sinonjs/commons@^1.7.0":
