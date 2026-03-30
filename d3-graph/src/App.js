@@ -15,7 +15,7 @@ client.config.configureEditorPanel([
 const width = 600;
 const height = 600;
 function renderGraph(data, ref) {
-  if (!ref.current) return null;
+  if (!ref.current) return 'null';
   d3.selectAll('svg > *').remove();
   const links = data.links.map(d => Object.create(d));
   const nodes = data.nodes.map(d => Object.create(d));
