@@ -1,10 +1,10 @@
+import { client, useConfig, useElementColumns, useElementData } from '@sigmacomputing/plugin';
+import * as d3 from 'd3';
+import { OrgChart } from 'd3-org-chart';
+import { useEffect } from 'react';
 import './App.css';
 import default_face from "./default.png";
 import root_face from "./sigma.jpg";
-import {client, useConfig, useElementData, useElementColumns} from '@sigmacomputing/plugin';
-import { useEffect, useRef, useMemo } from 'react';
-import { OrgChart } from 'd3-org-chart';
-import * as d3 from 'd3';
 
 // d.data.positionName
 // d.data.area
@@ -26,25 +26,24 @@ client.config.configureEditorPanel([
 function graph(data) {
   d3.selectAll('.container > *').remove();
   new OrgChart()
-      .container('.container')
-      .data(data)
-      .nodeHeight((d) => 85 + 25)
-      .nodeWidth((d) => 220 + 2)
-      .childrenMargin(d => 50)
-      .compactMarginBetween(d => 35)
-      .compactMarginPair(d => 30)
-      .neightbourMargin((a, b) => 20)
-      .buttonContent(({ node, state }) => {
-        return `<div style="border-radius:3px;padding:3px;font-size:10px;margin:auto auto;background-color:lightgray"> <span style="font-size:9px">${
-            node.children
-                ? `<i class="fas fa-chevron-up"></i>`
-                : `<i class="fas fa-chevron-down"></i>`
+    .container('.container')
+    .data(data)
+    .nodeHeight((d) => 85 + 25)
+    .nodeWidth((d) => 220 + 2)
+    .childrenMargin(d => 50)
+    .compactMarginBetween(d => 35)
+    .compactMarginPair(d => 30)
+    .neightbourMargin((a, b) => 20)
+    .buttonContent(({ node, state }) => {
+      return `<div style="border-radius:3px;padding:3px;font-size:10px;margin:auto auto;background-color:lightgray"> <span style="font-size:9px">${node.children
+        ? `<i class="fas fa-chevron-up"></i>`
+        : `<i class="fas fa-chevron-down"></i>`
         }</span> ${node.data._directSubordinates}  </div>`;
-      })
-      .nodeContent(function (d, i, arr, state) {
-        const color = '#FFFFFF';
-        const imageDiffVert = 25 + 2;
-        return `
+    })
+    .nodeContent(function (d, i, arr, state) {
+      const color = '#FFFFFF';
+      const imageDiffVert = 25 + 3;
+      return `
                 <div className="parent" style='width:${d.width}px;height:${d.height}px;padding-top:${imageDiffVert - 2}px;padding-left:1px;padding-right:1px;'>
 
                         <div className="person-component" style="font-family: 'Inter', sans-serif;background-color:${color};  margin-left:-1px;width:${d.width - 2}px;height:${d.height - imageDiffVert}px;border-radius:10px;border: 1px solid #E4E2E9; display:flex; justify-content:center; align-items:center; flex-direction:column; position: relative">
@@ -73,8 +72,8 @@ function graph(data) {
                         </div>
                     </div>
                             `;
-      })
-      .render();
+    })
+    .render();
 }
 function transform(config, columns, sigmaData) {
   const name = config.name;
@@ -100,12 +99,12 @@ function transform(config, columns, sigmaData) {
         "id": sigmaData[id][idx],
         "parentId": sigmaData[parentId][idx]
       });
-      if(!sigmaData[parentId][idx]) {
+      if (!sigmaData[parentId][idx]) {
         roots.push(idx);
       }
     }
-    if(roots.length > 1) {
-      for(let j=0; j < roots.length; ++j) {
+    if (roots.length > 1) {
+      for (let j = 0; j < roots.length; ++j) {
         const idx = roots[j];
         data[idx]['parentId'] = "Root";
       }
@@ -142,9 +141,9 @@ function App() {
   }, [config, columns, sigmaData]);
 
   return (
-      <div className="App">
-        <div className="container"/>
-      </div>
+    <div className="App">
+      <div className="container" />
+    </div>
   );
 };
 
