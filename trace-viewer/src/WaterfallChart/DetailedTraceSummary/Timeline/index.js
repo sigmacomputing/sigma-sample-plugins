@@ -41,9 +41,9 @@ class Timeline extends React.Component {
         const { spans } = this.props.traceSummary
         console.log("found spans", spans);
         this.spanRefs = new Map();
-        spans.map((span) => {
-            this.spanRefs[span.spanId] = React.createRef()
-        })
+        spans.forEach((span) => {
+            this.spanRefs[span.spanId] = React.createRef();
+        });
     }
 
     componentDidMount() {
@@ -135,12 +135,12 @@ class Timeline extends React.Component {
         // console.log("setDataOpenedSpans; spanIdArr: ", spanIdArr);
 
         let dataOpenedSpans = {}
-        spanIdArr.map((spanId) => {
+        spanIdArr.forEach((spanId) => {
             dataOpenedSpans = {
                 ...dataOpenedSpans,
                 [spanId]: true,
-            }
-        })
+            };
+        });
 
         this.setState({ dataOpenedSpans })
     }
@@ -214,7 +214,6 @@ class Timeline extends React.Component {
     calculateChildsSpanMeasures = (span) => {
         const { spans } = this.props.traceSummary
         let measures = []
-        let left
 
         let childSpan
 

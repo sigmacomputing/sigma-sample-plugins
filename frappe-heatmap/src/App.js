@@ -45,6 +45,7 @@ function App() {
       start: new Date(start),
       end: new Date(end),
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, config.dimension, config.measures, sigmaData]);
 
   React.useEffect(() => {
@@ -52,6 +53,7 @@ function App() {
       type: 'heatmap',
       data,
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {

@@ -3674,13 +3674,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sigmacomputing/plugin@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@sigmacomputing/plugin@npm:1.0.5"
+"@sigmacomputing/plugin@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@sigmacomputing/plugin@npm:1.1.1"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 6713914b3f776a66371f46d34371974d1d77689bf8ab7c33876c104f3e323cf58edd4c2244fa4c3c234dc170292b3fc9d053a47b2fcbc92dde110011f3fb0645
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/f2e3c15f37287cc81a13586f13d7d6702418ba7dcea3b25cd4313622dd26a533a68f1e3af712bac64a44ca80484d27ba763c9b71c8a39174661dc434d646d547
   languageName: node
   linkType: hard
 
@@ -14012,7 +14012,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sigma-plugin-org-chart@workspace:."
   dependencies:
-    "@sigmacomputing/plugin": "npm:^1.0.5"
+    "@sigmacomputing/plugin": "npm:^1.1.1"
     "@testing-library/jest-dom": "npm:^5.17.0"
     "@testing-library/react": "npm:^13.4.0"
     "@testing-library/user-event": "npm:^13.5.0"

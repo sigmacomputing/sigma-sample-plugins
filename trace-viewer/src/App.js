@@ -4,7 +4,6 @@ import 'pretty-print-json/css/pretty-print-json.dark-mode.min.css';
 import {
   useConfig,
   useEditorPanelConfig,
-  useElementColumns,
   useElementData,
 } from "@sigmacomputing/plugin";
 import WaterfallChart from './WaterfallChart';
@@ -43,7 +42,6 @@ function App() {
     { name: "Tags", type: "column", source: "source", allowMultiple: false },
   ]);
   const config = useConfig();
-  const columnInfo = useElementColumns(config.source);
   const data = useElementData(config.source);
 
   const trace_id_column = config["Trace ID"];

@@ -4,7 +4,7 @@ import React from 'react';
 // import { formatDuration } from '../../util/timestamp';
 import { formatDuration } from './util/timestamp';
 // import { getServiceNameColor } from '../../util/color';
-import { getServiceNameColor, getColorFromSpan } from './util/color';
+import { getColorFromSpan } from './util/color';
 
 const propTypes = {
     startTs: PropTypes.number.isRequired,

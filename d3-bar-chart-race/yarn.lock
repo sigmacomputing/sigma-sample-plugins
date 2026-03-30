@@ -1533,10 +1533,10 @@
   "resolved" "https://registry.npmjs.org/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz"
   "version" "1.1.0"
 
-"@sigmacomputing/plugin@^0.6.71":
-  "integrity" "sha512-Si0z4pvJEF4FPAQhNqliybFfy26S2nZILgyZwZ2sUt6ebH6E6IZw9Ody3Ip56tmrtBQXFb304DHumFQRcXA3/A=="
-  "resolved" "https://registry.npmjs.org/@sigmacomputing/plugin/-/plugin-0.6.71.tgz"
-  "version" "0.6.71"
+"@sigmacomputing/plugin@^1.1.1":
+  "integrity" "sha512-vlJX+vibR6Mb9eX/InK28wiMZA4rO0qWzvMaCklJSkXw18XOx7yj8WZ65DOeol6eD9MzkZdEuJtCK+wwv7K0sA=="
+  "resolved" "https://registry.npmjs.org/@sigmacomputing/plugin/-/plugin-1.1.1.tgz"
+  "version" "1.1.1"
 
 "@sinonjs/commons@^1.7.0":
   "integrity" "sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ=="

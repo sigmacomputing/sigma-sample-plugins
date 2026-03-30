@@ -77,9 +77,9 @@ function transform(config, columns, sigmaData) {
 
   function createkeyframes() {
     const keyframes = [];
-    let ka, a;
-    for ([ka, a] of datevalues) {
-      keyframes.push([ka, rank((name) => a.get(name) || 0)]);
+    for (const [ka, a] of datevalues) {
+      const dataMap = a;
+      keyframes.push([ka, rank((name) => dataMap.get(name) || 0)]);
     }
     return keyframes;
   }

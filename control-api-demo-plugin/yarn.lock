@@ -1555,17 +1555,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.4.tgz#0c8b74c50f29ee44f423f7416829c0bf8bb5eb27"
   integrity sha512-LwzQKA4vzIct1zNZzBmRKI9QuNpLgTQMEjsQLf3BXuGYb3QPTP4Yjf6mkdX+X1mYttZ808QpOwAzZjv28kq7DA==
 
-"@sigmacomputing/plugin-types@^0.7.34":
-  version "0.7.34"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin-types/-/plugin-types-0.7.34.tgz#4876401176d8c642431bd43a51116a0d8feba2c9"
-  integrity sha512-5VXuRR5t91vp6w5MdJGJ9bRzPsCp2MHSHjNKpWIJsgRY4EXjgVAGFnpp3P116yl1YOQHb/crTtTox0JBn8gTHg==
-
-"@sigmacomputing/plugin@^0.7.33":
-  version "0.7.34"
-  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-0.7.34.tgz#723b36761043ce426aebdb4be40a917b35a442f8"
-  integrity sha512-k/gPpdu/U0nF35p+RGQ8LYuM5UR8WUmeVcLw4E0TvEsfnHn1vfjbyM7QeGxIJsSs/0TBV3G2NAXyiOin+UFmJw==
-  dependencies:
-    "@sigmacomputing/plugin-types" "^0.7.34"
+"@sigmacomputing/plugin@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@sigmacomputing/plugin/-/plugin-1.1.1.tgz#a9f92b609abf4324f5707be509ebf6aee55ece37"
+  integrity sha512-vlJX+vibR6Mb9eX/InK28wiMZA4rO0qWzvMaCklJSkXw18XOx7yj8WZ65DOeol6eD9MzkZdEuJtCK+wwv7K0sA==
 
 "@sinclair/typebox@^0.24.1":
   version "0.24.20"

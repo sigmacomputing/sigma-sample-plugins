@@ -1319,13 +1319,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sigmacomputing/plugin@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "@sigmacomputing/plugin@npm:1.0.6"
+"@sigmacomputing/plugin@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@sigmacomputing/plugin@npm:1.1.1"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/30326be8a39fff6368db56d335cc48c8ff7d61e0dd590a721b572d2a65051c9669a3d632564686ce8d5670126cccf2119c36bd1d96f91ad4949194f8a6b2e85f
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/f2e3c15f37287cc81a13586f13d7d6702418ba7dcea3b25cd4313622dd26a533a68f1e3af712bac64a44ca80484d27ba763c9b71c8a39174661dc434d646d547
   languageName: node
   linkType: hard
 
@@ -2079,7 +2079,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "clustering-map@workspace:."
   dependencies:
-    "@sigmacomputing/plugin": "npm:^1.0.6"
+    "@deck.gl/core": "npm:8.3.11"
+    "@deck.gl/layers": "npm:8.3.11"
+    "@deck.gl/react": "npm:8.3.11"
+    "@sigmacomputing/plugin": "npm:^1.1.1"
     "@testing-library/jest-dom": "npm:^5.11.4"
     "@testing-library/react": "npm:^11.1.0"
     "@testing-library/user-event": "npm:^12.1.10"

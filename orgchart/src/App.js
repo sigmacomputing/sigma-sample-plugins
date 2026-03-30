@@ -2,7 +2,7 @@ import './App.css';
 import default_face from "./default.png";
 import root_face from "./sigma.jpg";
 import {client, useConfig, useElementData, useElementColumns} from '@sigmacomputing/plugin';
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect } from 'react';
 import { OrgChart } from 'd3-org-chart';
 import * as d3 from 'd3';
 
